@@ -1,4 +1,4 @@
-$aside-bg: #4b6584;
+$aside-bg: #3c596a;
 $aside-col: white;
 
 
@@ -9,9 +9,6 @@ body {
     height: 100%;
 }
 
-html {
-    margin-left: calc(100vw - 100%);
-}
 
 
 aside.sidebar {
@@ -66,6 +63,20 @@ aside.sidebar {
             font-size: 0.75rem;
         }
     }
+}
+
+.score-circle {
+    border-radius: 50%;
+    border: 0.3rem solid green;
+    width: 4rem;
+    height: 4rem;
+    line-height: 3.25rem;
+    text-align: center;
+    font-size: 1.75rem;
+}
+
+.score-circle-warning {
+    border-color: orange;
 }
 
 .space-around {

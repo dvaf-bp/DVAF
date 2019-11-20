@@ -5,12 +5,8 @@ body {
   height: 100%;
 }
 
-html {
-  margin-left: calc(100vw - 100%);
-}
-
 aside.sidebar {
-  background: #4b6584;
+  background: #3c596a;
   position: fixed;
   padding: 0;
   top: 0;
@@ -20,7 +16,7 @@ aside.sidebar {
 }
 
 aside.sidebar header {
-  background: #394c63;
+  background: #2a3e49;
   padding: 2rem;
 }
 
@@ -36,7 +32,7 @@ aside.sidebar .nav {
 
 aside.sidebar .nav-link {
   color: white;
-  border-bottom: 1px solid #425974;
+  border-bottom: 1px solid #334b5a;
   padding: 0.75rem 1rem;
 }
 
@@ -45,11 +41,11 @@ aside.sidebar .nav-link i {
 }
 
 aside.sidebar .nav-link.active {
-  background: #547194;
+  background: #45677a;
 }
 
 aside.sidebar .nav-link:hover {
-  background: #547194;
+  background: #45677a;
 }
 
 aside.sidebar footer {
@@ -62,6 +58,20 @@ aside.sidebar footer {
 aside.sidebar footer a {
   color: white;
   font-size: 0.75rem;
+}
+
+.score-circle {
+  border-radius: 50%;
+  border: 0.3rem solid green;
+  width: 4rem;
+  height: 4rem;
+  line-height: 3.25rem;
+  text-align: center;
+  font-size: 1.75rem;
+}
+
+.score-circle-warning {
+  border-color: orange;
 }
 
 .space-around {
