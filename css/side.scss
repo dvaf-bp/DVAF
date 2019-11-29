@@ -65,44 +65,6 @@ aside.sidebar {
     }
 }
 
-.score-circle {
-    border-radius: 50%;
-    border: 0.3rem solid green;
-    width: 4rem;
-    height: 4rem;
-    line-height: 3.25rem;
-    text-align: center;
-    font-size: 1.75rem;
-}
-
-.score-circle-warning {
-    border-color: orange;
-}
-
-.space-around {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-}
-
-.box {
-    background: #f4f5f6;
-    margin: 1rem;
-    padding: 1.5rem 1.5rem;
-    flex: 1;
-
-    .bignum {
-        font-size: 2rem;
-        text-align: center;
-        display: block;
-    }
-
-    .subtitle {
-        display: block;
-        text-align: center;
-    }
-}
-
 .heading {
     background: #f4f5f6;
 }
