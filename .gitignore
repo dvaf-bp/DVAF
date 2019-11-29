@@ -165,3 +165,6 @@ public/
 .deploy*/
 src/_drafts
 package-lock.json
+css/*.css
+css/*.map
+
