@@ -155,3 +155,16 @@ fabric.properties
 # Editor-based Rest Client
 .idea/httpRequests
 /.idea
+
+.DS_Store
+Thumbs.db
+db.json
+*.log
+node_modules/
+public/
+.deploy*/
+src/_drafts
+package-lock.json
+css/*.css
+css/*.map
+

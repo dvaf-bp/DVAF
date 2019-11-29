@@ -1,0 +1,70 @@
+$aside-bg: #3c596a;
+$aside-col: white;
+
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+
+
+aside.sidebar {
+    background: $aside-bg;
+    position: fixed;
+    padding: 0;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 100;
+
+    header {
+        background: darken($aside-bg, 10%);
+        padding: 2rem;
+
+        h1 {
+            text-align: center;
+            color: $aside-col;
+        }
+    }
+
+    .nav {
+        position: sticky;
+    }
+
+    .nav-link {
+        color: $aside-col;
+        border-bottom: 1px solid darken($aside-bg, 5%);
+        padding: 0.75rem 1rem;
+
+        i {
+            margin-right: 0.75rem;
+        }
+
+        &.active {
+            background: lighten($aside-bg, 5%);
+        }
+
+        &:hover {
+            background: lighten($aside-bg, 5%);
+        }
+    }
+
+    footer {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        padding: 0.5rem;
+
+        a {
+            color: white;
+            font-size: 0.75rem;
+        }
+    }
+}
+
+.heading {
+    background: #f4f5f6;
+}
