@@ -1,0 +1,82 @@
+/*
+DVAF -  offers the security-research community with up-to-date information
+        about vulnerability trends, types, etc.
+
+Copyright (C) 2019-2020
+Nikolaos Alexopoulos <alexopoulos@tk.tu-darmstadt.de>,
+Lukas Hildebrand <lukas.hildebrand@stud.tu-darmstadt.de>,
+Jörn Schöndube <joe.sch@protonmail.com>,
+Tim Lange <tim.lange@stud.tu-darmstadt.de>,
+Moritz Wirth <mw@flanga.io>,
+Paul-David Zürcher <mail@pauldavidzuercher.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+*/
+
+@mixin white-gradient {
+	background: linear-gradient(to right,  rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%);
+}
+
+$animationSpeed: 40s;
+
+// Animation
+@keyframes scroll {
+	0% { transform: translateX(0); }
+	100% { transform: translateX(calc(-250px * 7))}
+}
+
+
+// Styling
+.slider {
+	background: white;
+	box-shadow: 0 10px 20px -5px rgba(0, 0, 0, .125);
+	height: 100px;
+	margin: auto;
+	overflow:hidden;
+	position: relative;
+	width: 50vw;
+	
+	&::before,
+	&::after {
+		@include white-gradient;
+		content: "";
+		height: 100px;
+		position: absolute;
+		width: 200px;
+		z-index: 2;
+	}
+	
+	&::after {
+		right: 0;
+		top: 0;
+		transform: rotateZ(180deg);
+	}
+
+	&::before {
+		left: 0;
+		top: 0;
+	}
+	
+	.slide-track {
+		animation: scroll $animationSpeed linear infinite;
+		display: flex;
+		width: calc(250px * 11);
+	}
+	
+	.slide {
+		height: 100px;
+		width: 250px;
+		img {
+			object-fit: contain;
+			align-self: center;
+		}
+	}
+}
