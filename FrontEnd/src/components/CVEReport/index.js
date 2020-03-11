@@ -25,6 +25,7 @@ import PropTypes from 'prop-types';
 import { BASE_URL } from '../../constants';
 import CVSSCalculator from './CVSSCalculator';
 import ScoreCircle from '../ScoreCircle';
+import QuestionHelper from '../questionHelper';
 
 class CVEReport extends Component {
   constructor(props) {
@@ -83,7 +84,9 @@ class CVEReport extends Component {
         {this.state.cweData !== undefined && Object.keys(this.state.cweData).length !== 0 ? (
           <div className="card mb-5">
             <div className="card-header">
-              <h5 className="m-0">CWE {this.state.cweData.id}</h5>
+              <h5 className="m-0">
+                <QuestionHelper elaboration="shortcut_cwe">CWE</QuestionHelper> {this.state.cweData.id}
+              </h5>
             </div>
             <div className="card-body">
               <h5>{this.state.cweData.name}</h5>

@@ -1,3 +1,4 @@
+//no-automatic-copyright-generation
 var gulp = require('gulp'),
   concat = require('gulp-concat'),
   uglify = require('gulp-uglify'),
@@ -22,8 +23,6 @@ var header = "/*!\n\
  * Chart.PolarExtra.js\n\
  * http://chartjs.org/\n\
  * Version: {{ version }}\n\
- *\n\
- * Released under the MIT license\n\
  */\n";
 
 gulp.task('build', buildTask);

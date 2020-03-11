@@ -21,16 +21,18 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Affero General Public License for more details.
 */
 import React, { Component } from 'react';
+import uniqueId from 'react-html-id';
 import PropTypes from 'prop-types';
 import { Pie } from 'react-chartjs-2';
 import 'chartjs-plugin-colorschemes';
+import GraphSwitch from '../GraphSwitch';
 
 class LanguageGraph extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      small: {
+      smallData: {
         labels: [],
         datasets: [
           {
@@ -38,7 +40,7 @@ class LanguageGraph extends Component {
           },
         ],
       },
-      expanded: {
+      expandedData: {
         labels: [],
         datasets: [
           {
@@ -47,6 +49,7 @@ class LanguageGraph extends Component {
         ],
       },
       sloc: [],
+      expanded: this.props.expanded,
     };
     this.initialState = { ...this.state };
 
@@ -62,6 +65,8 @@ class LanguageGraph extends Component {
         },
       },
     };
+
+    uniqueId.enableUniqueIds(this);
   }
 
   componentDidMount() {
@@ -84,19 +89,18 @@ class LanguageGraph extends Component {
       } else smallSlocs[4] += sloc;
     });
 
-    if (this.props.expanded)
-      Object.values(this.props.slocs).forEach(e => {
-        const res = `${((e[1] / total) * 100).toFixed(2)}%`;
-        if (res === '0.00%') e.push('<0.01%');
-        else e.push(res);
-      });
+    Object.values(this.props.slocs).forEach(e => {
+      const res = `${((e[1] / total) * 100).toFixed(2)}%`;
+      if (res === '0.00%') e.push('<0.01%');
+      else e.push(res);
+    });
 
     this.setState(prev => {
       const newState = { ...prev };
-      newState.small.labels = smallLabels;
-      newState.small.datasets[0].data = smallSlocs;
-      newState.expanded.labels = this.props.slocs.map(e => e[0]);
-      newState.expanded.datasets[0].data = this.props.slocs.map(e => e[1]);
+      newState.smallData.labels = smallLabels;
+      newState.smallData.datasets[0].data = smallSlocs;
+      newState.expandedData.labels = this.props.slocs.map(e => e[0]);
+      newState.expandedData.datasets[0].data = this.props.slocs.map(e => e[1]);
       return newState;
     });
   }
@@ -112,43 +116,35 @@ class LanguageGraph extends Component {
   }
 
   render() {
-    const ex = this.props.expanded ? (
-      <table className="table table-striped mt-4">
-        <thead>
-          <tr>
-            <th>Language</th>
-            <th>LOC</th>
-            <th>Percentage</th>
-          </tr>
-        </thead>
-        <tbody>
-          {this.props.slocs.map(sloc => (
-            <tr key={sloc[0]}>
-              <td>{sloc[0]}</td>
-              <td>{sloc[1]}</td>
-              <td>{sloc[2]}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    ) : (
-      ''
-    );
-    const data = this.props.expanded ? this.state.expanded : this.state.small;
-    if (this.props.expanded)
-      return (
-        <>
-          <div className="canvas-container">
-            <Pie ref={this.props.forwardRef} data={data} options={this.options} />
-          </div>
-          {ex}
-        </>
-      );
-
     return (
-      <div className="canvas-container">
-        <Pie ref={this.props.forwardRef} data={data} options={this.options} />
-      </div>
+      <>
+        {this.props.expandable ? <GraphSwitch defaultChecked={this.state.expanded} onChange={e => this.setState({ expanded: e })} /> : ''}
+
+        {this.state.expanded ? (
+          <table className="table table-striped mt-4">
+            <thead>
+              <tr>
+                <th>Language</th>
+                <th>LOC</th>
+                <th>Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              {this.props.slocs.map(sloc => (
+                <tr key={sloc[0]}>
+                  <td>{sloc[0]}</td>
+                  <td>{sloc[1]}</td>
+                  <td>{sloc[2]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <div className="canvas-container">
+            <Pie ref={this.props.forwardRef} data={this.state.smallData} options={this.options} />
+          </div>
+        )}
+      </>
     );
   }
 }
@@ -157,10 +153,12 @@ LanguageGraph.propTypes = {
   expanded: PropTypes.bool,
   slocs: PropTypes.node.isRequired,
   forwardRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]),
+  expandable: PropTypes.bool,
 };
 LanguageGraph.defaultProps = {
   expanded: false,
   forwardRef: null,
+  expandable: true,
 };
 
 export default LanguageGraph;

@@ -2,7 +2,6 @@
   "name": "Chart.PolarExtra.js",
   "description": "custom polar plot",
   "version": "0.1.0",
-  "license": "MIT",
   "main": "src/chart.polarExtra.js",
   "devDependencies": {
     "browserify": "^13.0.0",

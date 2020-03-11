@@ -26,13 +26,13 @@ import PageTitle from '../../components/pagetitle';
 import Box from '../../components/Box';
 import GraphContainer from '../../components/GraphContainer';
 import 'chartjs-plugin-colorschemes';
-import Dependencies from '../../components/Dependencies';
+import Listing from '../../components/Listing';
 import BoxTitle from '../../components/Box/BoxTitle';
 import './package.scss';
 import TimeGraph from '../../components/TimeGraph';
 import LanguageGraph from '../../components/LanguageGraph';
 import { BASE_URL } from '../../constants';
-import { timeShown } from '../../components/timescale';
+import { timeShown } from '../../components/TimeGraph/timescale';
 
 class Package extends Component {
   constructor(props) {
@@ -41,6 +41,7 @@ class Package extends Component {
     this.state = {
       versions: [],
       dependencies: [],
+      similarPackages: [],
       lang_data: {
         labels: [],
         datasets: [
@@ -61,6 +62,7 @@ class Package extends Component {
         const { versions } = pkg;
         const versionResults = [];
         const dependencies = pkg.versions[0].build_depends;
+        const { description } = pkg;
 
         versions.forEach(version => {
           versionResults.push([version.suites.join(', '), version.version]);
@@ -73,10 +75,23 @@ class Package extends Component {
             return b[1] - a[1];
           });
           newState.dependencies = dependencies;
+          newState.description = description;
           return newState;
         });
       })
       .catch(e => console.error(e));
+
+    fetch(`${BASE_URL}/api/v1/packages/match/${this.props.match.params.name}`)
+      .then(response => response.json())
+      .then(apiSimPkg => {
+        this.setState(prev => {
+          const newState = { ...prev };
+          newState.similarPackages = apiSimPkg.map(pkg => pkg.name);
+          return newState;
+        });
+      })
+      // eslint-disable-next-line no-console
+      .catch(e => console.log(e));
   }
 
   componentDidUpdate(prevProps) {
@@ -91,7 +106,10 @@ class Package extends Component {
   render() {
     return (
       <>
-        <PageTitle>{this.props.match.params.name}</PageTitle>
+        <PageTitle backLink={this.props.location.query ? `/search?query=${this.props.location.query}` : '/search'}>
+          {this.props.match.params.name}
+        </PageTitle>
+        <i> {this.state.description} </i>
         <section className="package-page">
           <Box>
             <BoxTitle>Versions</BoxTitle>
@@ -111,16 +129,29 @@ class Package extends Component {
               </tbody>
             </table>
           </Box>
-          <GraphContainer title="Languages" to={`${this.props.match.params.name}/languages`}>
+          <GraphContainer title="Languages">
             <LanguageGraph slocs={this.state.slocs} />
           </GraphContainer>
           <Box>
             <BoxTitle>Dependencies</BoxTitle>
-            <Dependencies dependencies={this.state.dependencies} />
+            <Listing emptyMessage="This package has no build dependencies." list={this.state.dependencies} />
           </Box>
+          {this.state.similarPackages.length > 1 ? (
+            <Box>
+              <BoxTitle>Similar Packages</BoxTitle>
+              <Listing emptyMessage="No similar packages in Database." list={this.state.similarPackages} />
+            </Box>
+          ) : (
+            <> </>
+          )}
         </section>
-        <GraphContainer title="Vulnerabilities versus Time" to={`${this.props.match.params.name}/vuln`}>
-          <TimeGraph mode="package" show={timeShown.month} url={`/api/v1/packages/cves/count/${this.props.match.params.name}`} />
+        <GraphContainer title="Vulnerabilities versus Time">
+          <TimeGraph
+            mode="package"
+            show={timeShown.month}
+            chartUrl={`/api/v1/packages/cves/count/${this.props.match.params.name}`}
+            tableUrl={`/api/v1/packages/cves/${this.props.match.params.name}`}
+          />
         </GraphContainer>
       </>
     );
@@ -132,6 +163,9 @@ Package.propTypes = {
     params: PropTypes.shape({
       name: PropTypes.string,
     }).isRequired,
+  }).isRequired,
+  location: PropTypes.shape({
+    query: PropTypes.string.isRequired,
   }).isRequired,
 };
 

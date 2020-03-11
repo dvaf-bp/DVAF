@@ -25,7 +25,7 @@ import PropTypes from 'prop-types';
 
 const Accordion = props => {
   return (
-    <div className="accordion" id={props.id}>
+    <div className={`accordion ${props.className}`} id={props.id}>
       {props.children}
     </div>
   );
@@ -34,6 +34,10 @@ const Accordion = props => {
 Accordion.propTypes = {
   children: PropTypes.node.isRequired,
   id: PropTypes.string.isRequired,
+  className: PropTypes.string,
+};
+Accordion.defaultProps = {
+  className: '',
 };
 
 export default Accordion;

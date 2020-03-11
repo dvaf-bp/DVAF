@@ -26,9 +26,12 @@ GNU Affero General Public License for more details.
     padding: 1.5rem 1.5rem;
     display: flex;
     flex-direction: column;
+    position: relative;
 
     h5 {
-        margin-right: 32px;
+        text-align: center;
+        margin-right: 74px;
+        margin-left: 74px;
     }
 
     .canvas-container {

@@ -31,11 +31,6 @@ import AccordionContainer from '../../components/Accordion/Container';
 import PolarExtra from '../../components/PolarExtra';
 
 const Results = props => {
-  const filterPolar = filter =>
-    Object.entries(props.location.polar_chart)
-      .filter(e => e[0] !== 'rest' && e[0] !== 'total_cve_count')
-      .map(e => e[1][filter]);
-
   if (!props.location.cves)
     return (
       <>
@@ -46,37 +41,43 @@ const Results = props => {
       </>
     );
 
+  const usableEntries = Object.entries(props.location.polar_chart).filter(
+    e => e[0] !== 'rest' && e[0] !== 'total_cve_count' && Math.min(...Object.values(e[1])) !== 0,
+  );
+  const filterPolar = filter => usableEntries.filter(e => e[0] !== 'rest' && e[0] !== 'total_cve_count').map(e => e[1][filter]);
+
   return (
     <>
       <PageTitle>Results</PageTitle>
       <div className="mb-4">
         <PolarExtra
           data={{
-            labels: Object.keys(props.location.polar_chart).filter(e => e !== 'rest' && e !== 'total_cve_count'),
+            labels: usableEntries.map(e => e[0]),
             datasets: [
               {
-                data: filterPolar('cve_count'),
                 width: filterPolar('max_severity'),
+                length: filterPolar('cve_count'),
                 color: filterPolar('avg_severity'),
               },
             ],
           }}
           options={{
-            text: props.location.polar_chart.total_cve_count,
-            widthBase: 10,
+            text: '',
             colorBase: 10,
+            widthBase: 10,
             alwaysShowLabel: true,
-            lengthLabel: 'CVE count',
-            widthLabel: 'maximum severity',
+            lengthLabel: 'total CVE count',
+            widthLabel: 'highest severity',
             colorLabel: 'average severity',
+            opacity: 0.5,
           }}
         />
       </div>
       <Accordion id="cve_results">
         {Object.entries(props.location.cves)
-          .sort((a, b) => b[1].affecting_cve_count - a[1].affecting_cve_count)
+          .sort((a, b) => b[1].open_cve_count - a[1].open_cve_count)
           .map(([pkg, cves]) => {
-            const len = cves.affecting_cve_count;
+            const len = cves.open_cve_count;
             return (
               <AccordionContainer key={pkg}>
                 <AccordionHeader disabled={len === 0} for={pkg}>
@@ -89,7 +90,7 @@ const Results = props => {
                   ''
                 ) : (
                   <AccordionContent for={pkg} parent="cve_results">
-                    <CVETable cves={cves.affecting_cves} />
+                    <CVETable cves={cves.open_cves} />
                   </AccordionContent>
                 )}
               </AccordionContainer>

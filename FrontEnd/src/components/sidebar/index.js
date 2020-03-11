@@ -23,7 +23,7 @@ GNU Affero General Public License for more details.
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import './sidebar.scss';
+import './index.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Entry from './entry';
 
@@ -45,11 +45,11 @@ const Sidebar = props => {
         <Entry to="/search" icon="search">
           Search
         </Entry>
-        <Entry to="/upload" icon="upload">
-          Upload
+        <Entry to="/scan" icon="upload">
+          Scan Packages
         </Entry>
-        <Entry to="/doc" icon="book">
-          Documentation
+        <Entry to="/info" icon="book">
+          Information
         </Entry>
         <Entry to="/export" icon="file-export">
           Export Data

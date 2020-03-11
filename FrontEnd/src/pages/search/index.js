@@ -20,34 +20,22 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Affero General Public License for more details.
 */
-$icon-list: "AVPhysical", "AVLocal", "AVAdjacent", "AVNetwork", 
-            "ACLow", "ACHigh", 
-            "AuNone", "AuSingle", "AuMultiple", 
-            "UIRequired", "UINone", "ACMedium", 
-            "CNone", "CPartial", "CComplete", 
-            "INone", "IPartial", "IComplete", 
-            "ANone", "APartial", "AComplete";
+import React from 'react';
+import PropTypes from 'prop-types';
+import PageTitle from '../../components/pagetitle';
+import Searcher from '../../components/Searcher';
 
-@each $current-icon in $icon-list {
-    $i: index($icon-list, $current-icon);
-    .icon-#{$current-icon} {
-        width: 2rem;
-        height: 2rem;
-        display: inline-block;
-        background: url("/img/cvssicons.png") 0 0 no-repeat;
-        background-position-x: -2rem * $i + 2rem;
-        background-size: cover;
-        vertical-align: middle;
-        font-size: 40px;
-        margin-right: 0.5rem;
-    }
+function Search(props) {
+  return (
+    <>
+      <PageTitle>Search</PageTitle>
+      <Searcher history={props.history} />
+    </>
+  );
 }
 
-.list-group-item-warning-plus {
-    color: darken(#856404, 5%);
-    background-color: darken(#ffeeba, 15%);
-}
+Search.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+};
 
-.nowrap {
-    white-space: nowrap;
-  }
+export default Search;

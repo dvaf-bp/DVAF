@@ -20,34 +20,57 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Affero General Public License for more details.
 */
-$icon-list: "AVPhysical", "AVLocal", "AVAdjacent", "AVNetwork", 
-            "ACLow", "ACHigh", 
-            "AuNone", "AuSingle", "AuMultiple", 
-            "UIRequired", "UINone", "ACMedium", 
-            "CNone", "CPartial", "CComplete", 
-            "INone", "IPartial", "IComplete", 
-            "ANone", "APartial", "AComplete";
+.dropzone {
+    background: #f4f5f6;
+    text-align: center;
+    border-radius: 10px;
 
-@each $current-icon in $icon-list {
-    $i: index($icon-list, $current-icon);
-    .icon-#{$current-icon} {
-        width: 2rem;
-        height: 2rem;
-        display: inline-block;
-        background: url("/img/cvssicons.png") 0 0 no-repeat;
-        background-position-x: -2rem * $i + 2rem;
-        background-size: cover;
-        vertical-align: middle;
-        font-size: 40px;
-        margin-right: 0.5rem;
+
+    &.is-dragover,
+    &:hover {
+        background: darken(#f4f5f6, 5%);
+    }
+
+    &-file {
+        width: 0px;
+        height: 0px;
+        overflow: hidden;
+        opacity: 0;
+        z-index: -1;
+    }
+
+    &-input {
+        position: relative;
+        padding: 5rem 2rem;
+
+        .ico {
+            width: 100%;
+            font-size: 5rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        label {
+            cursor: pointer;
+            position: absolute;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0;
+        }
     }
 }
 
-.list-group-item-warning-plus {
-    color: darken(#856404, 5%);
-    background-color: darken(#ffeeba, 15%);
+.direct-input {
+    textarea {
+        width: 100%;
+        min-height: 10rem;
+    }
 }
 
-.nowrap {
-    white-space: nowrap;
-  }
+.tab-content {
+    border: 1px solid #dee2e6;
+    border-top: 0px;
+    padding: 1rem;
+}
