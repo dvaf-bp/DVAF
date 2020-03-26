@@ -1,0 +1,11 @@
+{
+  "description": "security update",
+  "moreinfo":"<p>Multiple security issues have been found in Thunderbird, which may lead\nto the execution of arbitrary code or denial of service.</p>\n\n<p>For the stable distribution (stretch), this problem has been fixed in\nversion 1:60.4.0-1~deb9u1.</p>\n\n<p>We recommend that you upgrade your thunderbird packages.</p>\n\n<p>For the detailed security status of thunderbird please refer to\nits security tracker page at:\n<a href=\"https://security-tracker.debian.org/tracker/thunderbird\">\\\nhttps://security-tracker.debian.org/tracker/thunderbird</a></p>",
+  "pagetitle": "DSA-4362-1 thunderbird",
+  "report_date":"2019-1-01",
+  "secrefs": "CVE-2018-18498 CVE-2018-18494 CVE-2018-18493 CVE-2018-18492 CVE-2018-17466 CVE-2018-12405",
+  "packages": "thunderbird",
+  "isvulnerable": "yes",
+  "fixed": "yes",
+  "fixed-section": "no"
+}
