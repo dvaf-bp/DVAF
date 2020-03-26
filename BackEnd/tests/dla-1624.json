@@ -1,0 +1,10 @@
+{   "description":"LTS security update",
+    "moreinfo": "<p>Multiple security issues have been found in Thunderbird, which may lead\nto the execution of arbitrary code or denial of service.</p>\n\n<p>For Debian 8 <q>Jessie</q>, this problem has been fixed in version\n1:60.4.0-1~deb8u1.</p>\n\n<p>We recommend that you upgrade your thunderbird packages.</p>\n\n<p>Further information about Debian LTS security advisories, how to apply\nthese updates to your system and frequently asked questions can be\nfound at: <a href=\"https://wiki.debian.org/LTS\">https://wiki.debian.org/LTS</a></p>",
+    "pagetitle":"DLA-1624-1 thunderbird",
+    "report_date":"2019-1-2",
+    "secrefs":"not yet available",
+    "packages":"thunderbird",
+    "isvulnerable":"yes",
+    "fixed":"yes",
+    "fixed-section":"no"
+}
