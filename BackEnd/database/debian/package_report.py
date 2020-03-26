@@ -66,7 +66,8 @@ group cves by time?
     "cve_report_options": dict,
     "group_cves": "no" / "day" / "month" / "year",
     "time_from": "DD-MM-YYYY",
-    "time_to": "DD-MM-YYYY"
+    "time_to": "DD-MM-YYYY",
+    "modified": "no" / "yes"
 }
 """
 
@@ -80,7 +81,7 @@ from datetime import datetime
 def get_package_by_name(pkg_name):
     """
     """
-    filt = {"pkg_name": pkg_name}
+    filt = {"pkg_name": pkg_name.lower()}
     return db.database.debian.packages.find_one(filter=filt)
 
 
@@ -275,7 +276,7 @@ def filter_cves_date(cves: list, time_from: datetime,
 
 def compile_package_report(pkg_name: str, options: dict):
     description = ""
-    use_tags = []
+    use_tags = dict()
     dependencies = []
     sloc = None
     aliases = []
@@ -288,6 +289,7 @@ def compile_package_report(pkg_name: str, options: dict):
     version_string = ""
     dates = []
     versions = []
+    modified = ""
 
     package = get_package_by_name(pkg_name)
     logger.error(package)
@@ -297,7 +299,7 @@ def compile_package_report(pkg_name: str, options: dict):
             description = get_default(package, "description", "")
 
         if get_default(options, "use_tags", "no") == "yes":
-            use_tags = get_default(package, "use_tags", [])
+            use_tags = get_default(package, "tags", dict())
 
         version_option = get_default(options, "version", "newest")
         version, versions = get_package_version(package, version_option)
@@ -315,6 +317,9 @@ def compile_package_report(pkg_name: str, options: dict):
 
         if get_default(options, "aliases", "no") == "yes":
             aliases = get_aliases(pkg_name)
+
+        if get_default(options, "modified", "no") == "yes":
+            modified = get_default(packages, "modified", "")
 
         if get_default(options, "cves", "no") == "yes":
             open_cves_ids, closed_cves_ids, affecting_cves_ids = \
@@ -405,7 +410,8 @@ def compile_package_report(pkg_name: str, options: dict):
         "closed_cve_count": closed_cve_count,
         "affecting_cves": affecting_cves,
         "affecting_cve_count": affecting_cve_count,
-        "dates": dates
+        "dates": dates,
+        "modified": modified
     }
 
 

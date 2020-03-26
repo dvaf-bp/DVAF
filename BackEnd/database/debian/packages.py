@@ -25,7 +25,6 @@ from datetime import datetime, timedelta
 from database.debian.version import deb_version_compare
 
 
-# codacy thinks this is a syntax error, it's not
 def get_dlas_dsas(pkg_pred) -> (list, list):  # noqa
     """
     This method returns all dlas and dsas associated with the given
@@ -500,7 +499,7 @@ def get_package_aliases(pkg_name: str) -> list:
 
 
 def get_current_package_version(pkg_name: str) -> str:
-    filt = {"pkg_name": pkg_name}
+    filt = {"pkg_name": pkg_name.lower()}
     pkg = db.database.debian.packages.find_one(filter=filt)
 
     if pkg is None or "versions" not in pkg:

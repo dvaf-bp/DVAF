@@ -24,36 +24,49 @@ from flask import jsonify
 from webapp import app
 from flask import request
 from database.cve.cve import get_cves_by_ids, get_cwe_by_ids
+from database.cve.browse_cves import get_similar_cves_by_id
 
 
 @app.route("/api/v1/cves/info", methods=["POST"])
 def ep_get_cves_information():
     """
     This endpoint receives a list of CVE ids in the following form
-    {
-        "cves": ["CVE-1234-5678", "CVE-0000-1111", ...]
-    }
-    and returns all CVE and CWE information in the following form
-    {
-        "cves": {
-            "CVE-1234-5678": {
-                ...
-            },
-            "CVE-0000-1111": {
-                ...
-            },
-            ...
-        },
-        "cwes": {
-            "101": {
-                ...
-            },
-            "403": {
-                ...
-            },
-            ...
+    .. code-block::
+
+        {
+            "cves": ["CVE-1234-5678", "CVE-0000-1111", ...]
         }
-    }
+
+    and returns all CVE and CWE information in the following form
+    .. code-block::
+
+        {
+            "cves": {
+                "CVE-1234-5678": {
+                    ...
+                },
+                "CVE-0000-1111": {
+                    ...
+                },
+                ...
+            },
+            "cwes": {
+                "101": {
+                    ...
+                },
+                "403": {
+                    ...
+                },
+                ...
+            }
+        }
+
+    Args:
+        URL: */api/v1/cves/info*
+        CVE ids: As a JSON string in the request body.
+
+    Returns:
+        str: The CVE's and CWE's as a JSON string.
     """
     js = request.json
     cve_ids = js["cves"]
@@ -78,6 +91,33 @@ def ep_get_cves_information():
     resp = {
         "cves": cves,
         "cwes": cwes
+    }
+
+    return jsonify(resp)
+
+
+@app.route("/api/v1/cves/match/<string:partial_id>", methods=["GET"])
+def ep_get_similary_cves_by_id(partial_id):
+    """
+    This endpoint receives a partial CVE is such as "CVE-2015-" and
+    returns a list of similar CVE ids.
+    .. code-block::
+
+        {
+            "cves": ["CVE-2015-0001", "CVE-2015-0002", ...]
+        }
+
+    Args:
+        URL: */api/v1/cves/match*
+        partial_id: The CVE id.
+
+    Returns:
+        str: The list of CVE's as a JSON string.
+    """
+    cves = get_similar_cves_by_id(partial_id, 100)
+
+    resp = {
+        "cves": cves
     }
 
     return jsonify(resp)

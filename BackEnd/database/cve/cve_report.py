@@ -31,7 +31,8 @@ GNU Affero General Public License for more details.
     "published": ...,
     "cwe": ...,
     "summary": ...,
-    "cvss": ...
+    "cvss": ...,
+    "modified": ...,
 }
 """
 
@@ -46,6 +47,7 @@ def compile_cve_report(cve_id, options):
     cwe = None
     summary = None
     cvss = None
+    modified = None
 
     if bl.is_blacklisted(cve_id):
         return None
@@ -69,10 +71,14 @@ def compile_cve_report(cve_id, options):
         if get_default(options, "cvss", "no") == "yes":
             cvss = get_default(cve, "cvss", "")
 
+        if get_default(options, "modifies", "no") == "yes":
+            modified = get_default(cve, "Modified", "")
+
     return {
         "id": cve_id,
         "published": published,
         "cwe": cwe,
         "summary": summary,
-        "cvss": cvss
+        "cvss": cvss,
+        "modified": modified
     }

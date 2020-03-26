@@ -20,26 +20,21 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Affero General Public License for more details.
 """
-"""
-This module contains the download schedule for all the data. It's run
-every 24 hours.
-"""
-
-from collectors import logger
-from collectors.deb_sec_tracker import (
-    download_debian_security_tracker_json
-)
-from collectors.cve_collector import (
-    collect_cves
-)
+from database import db, logger
+from datetime import datetime
 
 
-def download():
-    logger.info("Beginning download of all data.")
+def collect_cves():
+    logger.info("Starting to collect CVEs")
 
-    # the file is only a few MB large, don't worry about timing out etc
-    logger.info("Downloading debian security tracker json.")
-    download_debian_security_tracker_json()
+    # run cve script
 
-    # does nothing atm
-    collect_cves()
+    logger.info("Collecting CVEs done.")
+
+    filt = {"name": "cves"}
+    up = {"$set": {"db_name": "cvedb",
+                   "collection_name": "cves",
+                   "last_updated": datetime.now()}}
+    db.database.meta.last_updated.update_one(filter=filt,
+                                             update=up,
+                                             upsert=True)

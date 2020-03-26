@@ -25,6 +25,7 @@ import requests
 from collectors.pkg_data_collector import PackageCollector
 from models.package import PackageVersion
 from tests import logger
+from datetime import datetime
 
 
 class PkgDataCollectorTest(unittest.TestCase):
@@ -44,12 +45,17 @@ class PkgDataCollectorTest(unittest.TestCase):
 
     def test_download_versions_for_package(self):
         versions = [
-            "0.9.8o-4squeeze23",
-            "0.9.8o-4squeeze14",
-            "0.9.6c-2.woody.7"
+            '0.9.8o-4squeeze23',
+            '0.9.8o-4squeeze14',
+            '0.9.8g-15+lenny16',
+            '0.9.8c-4etch9',
+            '0.9.8c-4etch3+m68k1',
+            '0.9.7e-3sarge5',
+            '0.9.6c-2.woody.7'
         ]
 
         resp = self.collector.download_versions_for_package("openssl")
+        print(resp)
 
         for version in versions:
             self.assertTrue(version in resp)
@@ -83,27 +89,27 @@ class PkgDataCollectorTest(unittest.TestCase):
         self.collector.load_tags()
         tags = self.collector.get_tags("openssl")
         spec = [
-            {"implemented-in": "c"},
-            {"interface": "commandline"},
-            {"protocol": "ssl"},
-            {"role": "program"},
-            {"scope": "utility"},
-            {"security": "cryptography"},
-            {"security": "integrity"},
-            {"use": "checking"}
+            "implemented-in::c",
+            "interface::commandline",
+            "protocol::ssl",
+            "role::program",
+            "scope::utility",
+            "security::cryptography",
+            "security::integrity",
+            "use::checking"
         ]
         logger.info(tags)
-        self.assertEqual(spec, tags)
+        self.assertEqual(tags, spec)
 
     def test_load_dependencies(self):
         self.collector.load_dependencies()
         self.assertIsNotNone(self.collector.dep_data)
 
-    def test_load_packagedata(self):
+    def test_load_package_data(self):
         self.collector.load_packagedata()
         self.assertIsNotNone(self.collector.pkg_data)
 
-    def test_updatedependencies(self):
+    def test_update_dependencies(self):
         pkg_info = self.collector.download_version_information_for_package("openssl", "1.0.1t-1+deb8u8")
         pkg_info2 = pkg_info
         self.collector.update_dependencies(pkg_info2)
@@ -113,10 +119,20 @@ class PkgDataCollectorTest(unittest.TestCase):
         self.collector.download_packages(['openssl', 'nginx'])
         # TODO: Finish test
 
-    def test_updatedependencies(self):
-        pkg_info = self.collector.download_version_information_for_package("openssl", "1.0.1k-3")
-        self.collector.update_dependencies(pkg_info)
+    def test_upsert(self):
+        pkg_names = ["firefox-esr"]
+        filt = {"pkg_name": "firefox-esr"}
 
-    def test_download_packages(self):
-        self.collector.download_packages(['openssl', 'nginx'])
-        # TODO: Finish test
+        self.collector.download_packages(pkg_names)
+        before = self.collector.db.database.debian.packages.find_one(filter=filt)
+        before["_id"] = 0
+        before["modified"] = datetime(year=2000, month=1, day=1)
+
+        self.collector.db.database.debian.packages.delete_one(filter=filt)
+
+        self.collector.download_packages(pkg_names)
+        after = self.collector.db.database.debian.packages.find_one(filter=filt)
+        after["_id"] = 0
+        after["modified"] = datetime(year=2000, month=1, day=1)
+
+        self.assertEquals(before, after)

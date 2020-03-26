@@ -28,7 +28,10 @@ by name and tags.
 import re
 from database import db
 from database.debian.levenshtein import levenshtein
-from database.debian.package_report import compile_package_reports
+from database.debian.package_report import (
+    compile_package_reports,
+    compile_package_report
+)
 
 
 def get_name_similar_packages(pkg_name, limit):
@@ -59,16 +62,15 @@ def get_name_similar_packages(pkg_name, limit):
         ...
     ]
     """
-    # Hewwo Mw. Wegex, pwease compiwe, thank you UwU
-    ex = re.compile(".*" + pkg_name + ".*")
+
+    ex = re.compile(".*" + pkg_name.lower() + ".*")
     filt = {"pkg_name": {"$regex": ex}}
     proj = {"_id": 0, "pkg_name": 1}
     packages = db.database.debian.packages.find(filter=filt,
                                                 projection=proj)
-    # Hewwo Mw. Sowt, pwease sowt thanks 'W'
     pkg_names = list(map(lambda e: e["pkg_name"], packages))
     pkg_names.sort(key=lambda name: levenshtein(name, pkg_name))
-    # *notices too many entries* You must go, sowwy QwQ
+    # Remove packages that exceed the limit
     pkg_names = pkg_names[0:limit]
 
     options = {
@@ -97,5 +99,44 @@ def get_name_similar_packages(pkg_name, limit):
     reports = list(reports.values())
     reports.sort(key=lambda report: levenshtein(report["name"],
                                                 pkg_name))
+
+    return reports
+
+
+def get_similar_packages_by_tags(pkg_name, lim):
+    filt = {"pkg_name": pkg_name}
+    proj = {"_id": 1, "pkg_name": 1, "tags": 1}
+    pkg = db.database.debian.packages.find_one(filter=filt, projection=proj)
+
+    result = db.database.debian.packages.aggregate([
+        {
+            "$project": {
+                "pkg_name": "$pkg_name",
+                "common_tag_count": {
+                    "$size": {
+                        "$setIntersection": ["$tags", pkg["tags"]]
+                    }
+                }
+            }
+        },
+        {
+            "$sort": {
+                "common_tag_count": -1
+            }
+        }
+    ])
+
+    pkg_names = [r["pkg_name"] for r in result][0:lim]
+
+    options = {
+        "aliases": "yes",
+        "description": "yes"
+    }
+
+    reports = []
+
+    for pkg_name in pkg_names:
+        report = compile_package_report(pkg_name, options)
+        reports.append(report)
 
     return reports

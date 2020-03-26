@@ -56,3 +56,4 @@ from webapp.v1api import models  # noqa
 from webapp.v1api.packages import packages_endpoints  # noqa
 from webapp.v1api.dashboard import dashboard_endpoints  # noqa
 from webapp.v1api.cve import cve_endpoints  # noqa
+from webapp.v1api.meta import meta_endpoints  # noqa

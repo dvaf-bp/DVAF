@@ -20,12 +20,20 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Affero General Public License for more details.
 """
+"""
+.. module:: Database
+    :synopsis: A module which handles the MongoDB database connection.
+"""
+
 import pymongo
 from database import dbConfig
 import logging
 
 
 class Database:
+    """
+    This class handles the connection to the local MongoDB database.
+    """
     def __init__(self):
         self.connected = False
         self.config = dbConfig.DBConfig()
@@ -42,12 +50,23 @@ class Database:
             self.logger.fatal("connection to database failed: {}".format(e))
 
     def close(self):
+        """Closes the database connection.
+        """
         self.client.close()
 
     def is_connected(self):
+        """Returns if the database connection was established.
+
+        Returns:
+            bool: True if the connection was established, False
+            otherwise
+        """
         return self.connected
 
     def insert_object(self, collection_name, serializable):
+        """This method is deprecated. Please use the MongoDB layer
+        directly.
+        """
         # check if collection exists
         if collection_name not in self.database.admin.collection_names():
             self.database.admin.create_collection(collection_name)
@@ -61,13 +80,18 @@ class Database:
             collection.create_index(primary_key_name, unique=True)
 
         # insert
-        collection.insert(serializable.to_dict())
+        dic = serializable.to_dict()
+        filt = {serializable.get_primary_key_name(): serializable.get_primary_key()}
+        collection.update_one(filter=filt,
+                              update={"$set": dic},
+                              upsert=True)
 
 
 # TODO: maybe move this in a different module
 def init_database():
-    """This function can be called to setup some of the few databases
-    and collections."""
+    """Calling this method will setup the local databases and their
+    indices.
+    """
     db = Database()
 
     # cvedb gets built by cve search

@@ -24,10 +24,10 @@ from webapp import app
 import atexit
 from apscheduler.schedulers.background import BackgroundScheduler
 from collectors.download_schedule import download
-from database.dashboard.dashboard import update_dashboard_cache
-
+from collectors.deb_sec_tracker import download_debian_security_tracker_json
 
 if __name__ == "__main__":
+    download_debian_security_tracker_json()
     # setup scheduler
     scheduler = BackgroundScheduler()
     scheduler.add_job(func=download, trigger="interval",

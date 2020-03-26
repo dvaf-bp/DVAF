@@ -91,39 +91,42 @@ class D_ACollectorTest(unittest.TestCase):
         self.assertEqual(d_a.db_fixed_section,
                          d_a_gold_standard["fixed-section"])
 
-    def test_get_d_as(self):
-        if os.getenv("LONGTIME_UNITTEST") != 'true':
-            return
+    # This tests were excluded because salsa/Debian are not very happy with downloading the same list over and over again just for testing reason
+    # Tests can be included again if something changes in the collectors, but for now, we are not going on their nerves and eat up their capacities.
 
-        dsa_collector = DSACollector()
-        dsas = dsa_collector.get_d_as()
-
-        dla_collector = DLACollector()
-        dlas = dla_collector.get_d_as()
-
-        dsa_ids = [dsa.db_d_a_id for dsa in dsas]
-        dla_ids = [dla.db_d_a_id for dla in dlas]
-
-        # test whether ids are unambiguous
-        self.assertEqual(len(dsa_ids), len(set(dsa_ids)))
-        self.assertEqual(len(dla_ids), len(set(dla_ids)))
-
-    def d_a_testing(self):
-        if os.getenv("LONGTIME_UNITTEST") != 'true':
-            print("Skipping long time unittest")
-            return
-
-        db = Database()
-
-        dla_collector = DLACollector()
-        dlas = dla_collector.get_d_as()
-
-        for dla in dlas:
-            db.insert_object("dla", dla)
-
-        dsa_collector = DSACollector()
-        dsas = dsa_collector.get_d_as()
-
-        for dsa in dsas:
-            db.insert_object("dsa", dsa)
-        sys.exit(0)
+    # def test_get_d_as(self):
+    #     if os.getenv("LONGTIME_UNITTEST") != 'true':
+    #         return
+    #
+    #     dsa_collector = DSACollector()
+    #     dsas = dsa_collector.get_d_as()
+    #
+    #     dla_collector = DLACollector()
+    #     dlas = dla_collector.get_d_as()
+    #
+    #     dsa_ids = [dsa.db_d_a_id for dsa in dsas]
+    #     dla_ids = [dla.db_d_a_id for dla in dlas]
+    #
+    #     # test whether ids are unambiguous
+    #     self.assertEqual(len(dsa_ids), len(set(dsa_ids)))
+    #     self.assertEqual(len(dla_ids), len(set(dla_ids)))
+    #
+    # def d_a_testing(self):
+    #     if os.getenv("LONGTIME_UNITTEST") != 'true':
+    #         print("Skipping long time unittest")
+    #         return
+    #
+    #     db = Database()
+    #
+    #     dla_collector = DLACollector()
+    #     dlas = dla_collector.get_d_as()
+    #
+    #     for dla in dlas:
+    #         db.insert_object("dla", dla)
+    #
+    #     dsa_collector = DSACollector()
+    #     dsas = dsa_collector.get_d_as()
+    #
+    #     for dsa in dsas:
+    #         db.insert_object("dsa", dsa)
+    #     sys.exit(0)

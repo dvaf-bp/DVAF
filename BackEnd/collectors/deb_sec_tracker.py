@@ -24,6 +24,7 @@ import requests
 import json
 from collectors import logger
 from database import db
+from datetime import datetime
 
 
 URL = "https://security-tracker.debian.org/tracker/data/json"
@@ -76,3 +77,13 @@ def download_debian_security_tracker_json():
     logger.info("Download of debian security tracker json successful.")
     logger.info("You can find it in the collection"
                 "debian.package_to_cves")
+
+    # each entry:
+    # { name: "", last_updated: ... }
+    filt = {"name": "debian_security_tracker"}
+    up = {"$set": {"db_name": "debian",
+                   "collection_name": "package_to_cves",
+                   "last_updated": datetime.now()}}
+    db.database.meta.last_updated.update_one(filter=filt,
+                                             update=up,
+                                             upsert=True)

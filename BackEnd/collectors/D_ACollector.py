@@ -120,8 +120,7 @@ class D_ACollector(ABC):
         for page in range(1, 100):
             # needs to be split in pages,
             # because limit is 100 entrys per request
-            page_data = self.get_data_from_url(
-                root_url + "?path=" + path + "&page={0}&per_page=100".format(page))
+            page_data = self.get_data_from_url(root_url + "?path=" + path + "&page={0}&per_page=100".format(page))
             new_d_a_repo_dirs = json.loads(page_data)
             if len(new_d_a_repo_dirs) == 0:
                 # reached end of files in directory

@@ -32,6 +32,43 @@ from database.dashboard.dashboard import (
 @app.route("/api/v1/dashboard/cves/<string:time_from>/"
            "<string:time_to>/<string:freq>", methods=['GET'])
 def ep_get_cves_over_time(time_from, time_to, freq):
+    """
+    This method returns all CVE's that got published in a given
+    timespan. They are grouped by a time interval.
+    An example return value can look like this:
+    .. code-block::
+
+        {
+            "cves": [
+                ...,
+                [...,
+                    {
+                        "Published": "Sun, 29 Dec 2019 20:15:00 GMT",
+                        "id": "CVE-2019-20063"
+                    },
+                ...],
+                ....
+            ]
+        ],
+            "labels": [
+                "Tue, 24 Dec 2019 00:00:00 GMT",
+                "Wed, 25 Dec 2019 00:00:00 GMT",
+                "Thu, 26 Dec 2019 00:00:00 GMT",
+                "Fri, 27 Dec 2019 00:00:00 GMT",
+                "Sat, 28 Dec 2019 00:00:00 GMT",
+                "Sun, 29 Dec 2019 00:00:00 GMT"
+            ]
+        }
+
+    Args:
+        URL: */api/v1/dashboard/cves/<string:time_from>/<string:time_to>/<string:freq>*
+        time_from: The date of the oldest published CVE in the format DD-MM-YYYY.
+        time_to: The date of the newest published CVE in the format DD-MM-YYYY.
+        freq: The time interval by which the CVE's shall be grouped. Can be "day", "month", "year".
+
+    Returns:
+        str: A JSON string containing the CVE's.
+    """
     t_from = parse_datetime(time_from)
     t_to = parse_datetime(time_to)
     labels, grouped_cves = get_cves_over_time_cached(t_from, t_to, freq)
@@ -47,6 +84,40 @@ def ep_get_cves_over_time(time_from, time_to, freq):
 @app.route("/api/v1/dashboard/cves/count/<string:time_from>/"
            "<string:time_to>/<string:freq>", methods=['GET'])
 def ep_get_cves_over_time_count(time_from, time_to, freq):
+    """
+    This method returns all CVE counts that got published in a given
+    timespan. They are grouped by a time interval. An example return
+    value can look like this.
+    .. code-block::
+
+        {
+            "cves_count": [
+                14,
+                3,
+                40,
+                41,
+                1,
+                3
+            ],
+            "labels": [
+                "Tue, 24 Dec 2019 00:00:00 GMT",
+                "Wed, 25 Dec 2019 00:00:00 GMT",
+                "Thu, 26 Dec 2019 00:00:00 GMT",
+                "Fri, 27 Dec 2019 00:00:00 GMT",
+                "Sat, 28 Dec 2019 00:00:00 GMT",
+                "Sun, 29 Dec 2019 00:00:00 GMT"
+            ]
+        }
+
+    Args:
+        URL: */api/v1/dashboard/cves/count/<string:time_from>/<string:time_to>/<string:freq>*
+        time_from: The date of the oldest published CVE in the format DD-MM-YYYY.
+        time_to: The date of the newest published CVE in the format DD-MM-YYYY.
+        freq: The time interval by which the CVE's shall be grouped. Can be "day", "month", "year".
+
+    Returns:
+        str: A JSON string containing the CVE counts.
+    """
     t_from = parse_datetime(time_from)
     t_to = parse_datetime(time_to)
 
@@ -63,6 +134,9 @@ def ep_get_cves_over_time_count(time_from, time_to, freq):
 @app.route("/api/v1/dashboard/cves/lang/<string:language>",
            methods=["GET"])
 def get_cve_count_by_language(language):
+    """
+    Deprecated
+    """
     cves = db.database.cvedb.cves
     dlas = db.database.debian.dlas
     dsas = db.database.debian.dsas

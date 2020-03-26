@@ -27,6 +27,7 @@ import requests
 import psycopg2
 from tqdm import tqdm
 from bs4 import BeautifulSoup
+from datetime import datetime
 
 from database import Database
 from models.package import Package
@@ -53,6 +54,26 @@ class PackageCollector:
         self.db = Database()
         self.dep_data = dict()
         self.pkg_data = dict()
+
+    def upsert_package(self, pkg_dict):
+        dict_copy = pkg_dict.copy()
+        dict_copy["modified"] = datetime.now()
+        filt = {"pkg_name": dict_copy["pkg_name"]}
+        up = {"$set": dict_copy}
+        r = self.db.database.debian.packages.update_one(filter=filt,
+                                                        update=up,
+                                                        upsert=True)
+
+    def done(self):
+        # each entry:
+        # { name: "", last_updated: ... }
+        filt = {"name": "debian_packages"}
+        up = {"$set": {"db_name": "debian",
+                       "collection_name": "packages",
+                       "last_updated": datetime.now()}}
+        self.db.database.meta.last_updated.update_one(filter=filt,
+                                                      update=up,
+                                                      upsert=True)
 
     def download_packages(self, pkg_names):
         if self.conn is None:
@@ -104,9 +125,12 @@ class PackageCollector:
                     logger.error("Failed to get tags: %s", e)
 
                 try:
-                    self.db.database.debian.packages.insert(pkg.to_dict())
+                    # self.db.database.debian.packages.insert(pkg.to_dict())
+                    self.upsert_package(pkg.to_dict())
                 except Exception as e:
                     logger.error("Failed to insert package %s into database %s", p, e)
+
+        self.done()
 
     def download_pkg_names(self):
         """
@@ -253,7 +277,6 @@ class PackageCollector:
         cursor.close()
 
     def update_dependencies(self, version):
-        # TODO: Make this code great for the first time
         """
         collect the dependencies for the given version
         and update the information inside the PackageVersion Object
@@ -285,6 +308,8 @@ class PackageCollector:
 
     def request(self, url):
         """Return the content of the given url"""
+        if self.conn is None:
+            self.conn = requests.Session()
         download_failure_retries = 0
         while download_failure_retries < 30:
             # For stability, when an error occurs it is retried
@@ -331,11 +356,7 @@ class PackageCollector:
                 self.tag_data[pkg_name] = []
                 sp2 = arr[1].split(", ")
                 for a in sp2:
-                    omglolrofl1ezggwpdata = a.split("::")
-                    if len(omglolrofl1ezggwpdata) != 2:
-                        logger.error("SPA Length does not really match: %s", len(omglolrofl1ezggwpdata))
-                        return
-                    self.tag_data[pkg_name].append({omglolrofl1ezggwpdata[0]: omglolrofl1ezggwpdata[1]})
+                    self.tag_data[pkg_name].append(a)
 
             except Exception as e:
                 logger.error("Failed to split data: %s", e)

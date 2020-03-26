@@ -20,26 +20,25 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Affero General Public License for more details.
 """
-"""
-This module contains the download schedule for all the data. It's run
-every 24 hours.
-"""
-
-from collectors import logger
-from collectors.deb_sec_tracker import (
-    download_debian_security_tracker_json
-)
-from collectors.cve_collector import (
-    collect_cves
-)
+from webapp import app, db
+from flask import jsonify
 
 
-def download():
-    logger.info("Beginning download of all data.")
+@app.route("/api/v1/meta/last_updated")
+def ep_get_last_update():
+    proj = {"_id": 0}
+    result = db.database.meta.last_updated.find(projection=proj)
+    # build a dict:
+    # db_name.collection_name -> { }
+    dic = dict()
 
-    # the file is only a few MB large, don't worry about timing out etc
-    logger.info("Downloading debian security tracker json.")
-    download_debian_security_tracker_json()
+    for entry in result:
+        db_name = entry["db_name"]
+        collection_name = entry["collection_name"]
 
-    # does nothing atm
-    collect_cves()
+        if db_name not in dic:
+            dic[db_name] = dict()
+
+        dic[db_name][collection_name] = dict(entry)
+
+    return jsonify(dic)

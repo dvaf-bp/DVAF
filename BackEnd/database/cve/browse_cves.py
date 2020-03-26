@@ -20,26 +20,22 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Affero General Public License for more details.
 """
-"""
-This module contains the download schedule for all the data. It's run
-every 24 hours.
-"""
-
-from collectors import logger
-from collectors.deb_sec_tracker import (
-    download_debian_security_tracker_json
-)
-from collectors.cve_collector import (
-    collect_cves
-)
+from database import db
+import re
 
 
-def download():
-    logger.info("Beginning download of all data.")
+def get_similar_cves_by_id(partial_id, limit=20):
+    """
+    This method returns all CVE's that have the partial_id in common.
+    At most limit number if CVE's get returned.
+    Args:
+        partial_id: The CVE id.
+        limit: Maximum number if CVE's that should be returned.
 
-    # the file is only a few MB large, don't worry about timing out etc
-    logger.info("Downloading debian security tracker json.")
-    download_debian_security_tracker_json()
-
-    # does nothing atm
-    collect_cves()
+    Returns:
+        list: A list of CVE's.
+    """
+    filt = {"id": {"$regex": re.compile(".*" + partial_id + ".*")}}
+    proj = {"id": 1, "summary": 1, "cvss": 1, "_id": 0}
+    results = db.database.cvedb.cves.find(filter=filt, projection=proj).limit(limit)
+    return list(results)
