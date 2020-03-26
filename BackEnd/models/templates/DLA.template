@@ -1,0 +1,20 @@
+From: $DEBFULLNAME <$DEBEMAIL>
+To: debian-lts-announce@lists.debian.org
+Subject: [SECURITY] [DLA $DLAID] $PACKAGE security update
+
+Package        : $PACKAGE
+Version        : $jessie_VERSION
+CVE ID         : $CVE
+Debian Bug     : $BUGNUM
+
+
+$TEXT
+
+For Debian 9 "Jessie", this problem has been fixed in version
+$jessie_VERSION.
+
+We recommend that you upgrade your $PACKAGE packages.
+
+Further information about Debian LTS security advisories, how to apply
+these updates to your system and frequently asked questions can be
+found at: https://wiki.debian.org/LTS
