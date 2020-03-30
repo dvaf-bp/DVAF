@@ -1,0 +1,76 @@
+/*
+DVAF -  offers the security-research community with up-to-date information
+        about vulnerability trends, types, etc.
+
+Copyright (C) 2019-2020
+Nikolaos Alexopoulos <alexopoulos@tk.tu-darmstadt.de>,
+Lukas Hildebrand <lukas.hildebrand@stud.tu-darmstadt.de>,
+Jörn Schöndube <joe.sch@protonmail.com>,
+Tim Lange <tim.lange@stud.tu-darmstadt.de>,
+Moritz Wirth <mw@flanga.io>,
+Paul-David Zürcher <mail@pauldavidzuercher.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+*/
+.dropzone {
+    background: #f4f5f6;
+    text-align: center;
+    border-radius: 10px;
+
+
+    &.is-dragover,
+    &:hover {
+        background: darken(#f4f5f6, 5%);
+    }
+
+    &-file {
+        width: 0px;
+        height: 0px;
+        overflow: hidden;
+        opacity: 0;
+        z-index: -1;
+    }
+
+    &-input {
+        position: relative;
+        padding: 5rem 2rem;
+
+        .ico {
+            width: 100%;
+            font-size: 5rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        label {
+            cursor: pointer;
+            position: absolute;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0;
+        }
+    }
+}
+
+.direct-input {
+    textarea {
+        width: 100%;
+        min-height: 10rem;
+    }
+}
+
+.tab-content {
+    border: 1px solid #dee2e6;
+    border-top: 0px;
+    padding: 1rem;
+}
