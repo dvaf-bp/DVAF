@@ -29,12 +29,10 @@ import InfoPage from './pages/info';
 import ExportPage from './pages/export';
 import PackagePage from './pages/package';
 import ResultsPage from './pages/results';
-import LanguageView from './pages/package/LanguageView';
 import CVEPage from './pages/cve';
 import Sidebar from './components/sidebar';
 import './App.scss';
 import Hamburger from './components/sidebar/hamburger';
-import VulnView from './pages/package/VulnView';
 import Imprint from './pages/Imprint/imprint';
 import DSGVO from './pages/DSGVO';
 import Footer from './components/footer';
@@ -77,8 +75,6 @@ class App extends Component {
             <Switch>
               <Route exact path="/" component={Dashboard} />
               <Route path="/search" component={SearchPage} />
-              <Route path="/package/:name/vuln" component={VulnView} />
-              <Route path="/package/:name/languages" component={LanguageView} />
               <Route path="/package/:name" component={PackagePage} />
               <Route path="/scan" component={ScanPage} />
               <Route path="/results" component={ResultsPage} />

@@ -22,10 +22,14 @@ GNU Affero General Public License for more details.
 */
 import styled from 'styled-components';
 
+/**
+ * Flex Container, so multiple Box Components space around evenly.
+ */
 const SpaceAround = styled.div`
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
 `;
 
+/** @component */
 export default SpaceAround;

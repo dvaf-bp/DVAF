@@ -28,6 +28,9 @@ import './graphcontainer.scss';
 import PropTypes from 'prop-types';
 import ReactResizeDetector from 'react-resize-detector';
 
+/**
+ * Container for graphs. Provides the box around, resize and download button.
+ */
 class GraphContainer extends Component {
   constructor(props) {
     super(props);
@@ -50,12 +53,19 @@ class GraphContainer extends Component {
     this.setState({ minHeight: this.thisRef.current.offsetHeight });
   }
 
+  /**
+   * Called on resize. Calls resize on chartjs graph.
+   */
   triggerResize() {
     if (this.chartRef.current == null) return;
 
     this.chartRef.current.chartInstance.resize();
   }
 
+  /**
+   * Converts to the desired format and triggers the download dialog
+   * @param {*} event click event
+   */
   download(event) {
     if (this.chartRef.current == null) return;
 
@@ -115,8 +125,11 @@ class GraphContainer extends Component {
 }
 
 GraphContainer.propTypes = {
+  /** Title as a Link to */
   to: PropTypes.string,
+  /** Title */
   title: PropTypes.string.isRequired,
+  /** Contains any graph */
   children: PropTypes.node.isRequired,
 };
 

@@ -29,6 +29,8 @@ import Box from '../../components/Box';
 import GraphContainer from '../../components/GraphContainer';
 import TimeGraph from '../../components/TimeGraph';
 import { BASE_URL } from '../../constants';
+import InformationHelper from '../../components/InformationHelper';
+import NormalMode from '../../components/TimeGraph/modes/Normal';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -36,25 +38,7 @@ class Dashboard extends Component {
 
     this.state = {
       DashboardData: null,
-      exBarChartData: {
-        labels: [],
-        datasets: [
-          {
-            trendlineLinear: {
-              style: '#45aaf2',
-              width: 2,
-            },
-            label: 'vulnerabilities',
-            data: [0],
-            backgroundColor: '#fc5c65',
-            borderColor: '#eb3b5a',
-            borderWidth: 2,
-          },
-        ],
-      },
     };
-
-    this.changeData = this.changeData.bind(this);
   }
 
   componentDidMount() {
@@ -85,15 +69,6 @@ class Dashboard extends Component {
           },
         });
       });
-  }
-
-  changeData(labels, data) {
-    this.setState(prev => {
-      const newState = { ...prev };
-      newState.exBarChartData.labels = labels;
-      newState.exBarChartData.datasets[0].data = data;
-      return prev;
-    });
   }
 
   render() {
@@ -131,7 +106,8 @@ class Dashboard extends Component {
           </Box>
         </SpaceAround>
         <GraphContainer title="Vulnerabilities versus Time">
-          <TimeGraph expandable={false} mode="normal" chartUrl="/api/v1/dashboard/cves/count" />
+          <TimeGraph expandable={false} mode={NormalMode} chartUrl="/api/v1/dashboard/cves/count" />
+          <InformationHelper template="nvd" />
         </GraphContainer>
       </>
     );

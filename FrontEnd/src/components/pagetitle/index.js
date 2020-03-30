@@ -26,6 +26,9 @@ import './pagetitle.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 
+/**
+ * Title of a page
+ */
 const PageTitle = props => {
   return (
     <header className="pagetitle">
@@ -45,7 +48,9 @@ const PageTitle = props => {
 };
 
 PageTitle.propTypes = {
+  /** Heading1 Content, e.g. Text */
   children: PropTypes.node.isRequired,
+  /** If set, a back button is shown with a reference to backLink  */
   backLink: PropTypes.string,
 };
 

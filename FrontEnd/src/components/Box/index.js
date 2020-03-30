@@ -22,6 +22,9 @@ GNU Affero General Public License for more details.
 */
 import styled from 'styled-components';
 
+/**
+ * Box with a light gray background
+ */
 const Box = styled.div`
   background: #f4f5f6;
   margin: 1rem;
@@ -39,4 +42,5 @@ const Box = styled.div`
   }
 `;
 
+/** @component */
 export default Box;

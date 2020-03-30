@@ -117,7 +117,10 @@
     
           this._chart.config.data.datasets[this._datasetIndex].backgroundColor = this._chart.config.data.datasets[this._datasetIndex].color.map(c => color2(c / this._chart.config.options.colorBase, this._chart.config.options.opacity));
           ctx.fillStyle = vm.backgroundColor;
-          ctx.strokeStyle = vm.borderColor;
+          if (vm.borderColor === "#fff")
+            ctx.strokeStyle = "transparent";
+          else
+            ctx.strokeStyle = "rgba" + vm.borderColor.substr(3, vm.borderColor.length - 4) + "," + this._chart.config.options.opacity + ")";
 
           var diff =
             ((arc.endAngle - arc.startAngle) *
@@ -141,7 +144,6 @@
           }
 
           if (vm.borderWidth) {
-            ctx.strokeStyle = vm.borderColor;
             ctx.lineWidth = vm.borderWidth;
             ctx.lineJoin = 'bevel';
             ctx.beginPath();

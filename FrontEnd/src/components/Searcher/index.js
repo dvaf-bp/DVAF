@@ -29,6 +29,9 @@ import { BASE_URL } from '../../constants';
 import PackageEntry from './PackageEntry';
 import CVEEntry from './CVEEntry';
 
+/**
+ * Search component
+ */
 class Searcher extends Component {
   constructor(props) {
     super(props);
@@ -59,18 +62,29 @@ class Searcher extends Component {
     if (query !== '') this.setState({ query }, this.query);
   }
 
+  /**
+   * Sets the URL to represent the current query
+   * @param {string} query query
+   */
   setParams(query) {
     const searchParams = new URLSearchParams();
     searchParams.set('query', query);
     this.props.history.push(`?${searchParams.toString()}`);
   }
 
+  /**
+   * Updates the input of the search bar
+   * @param {*} e typing event
+   */
   search(e) {
     clearTimeout(this.timeout);
 
     this.setState({ query: e.target.value }, this.query);
   }
 
+  /**
+   * Queries the backend after 250ms of no typing
+   */
   query() {
     this.timeout = setTimeout(() => {
       const value = this.state.query;
@@ -121,7 +135,7 @@ class Searcher extends Component {
           <input
             type="text"
             className="form-control form-control-lg"
-            placeholder="Search for package..."
+            placeholder="Search for package or cve..."
             value={this.state.query}
             onChange={this.search}
           />
@@ -140,7 +154,13 @@ class Searcher extends Component {
               return this.state.query.substr(0, 3).toLowerCase() === 'cve' ? (
                 <CVEEntry name={result.id} query={this.state.query} cvss={result.cvss ? result.cvss : 0} desc="" />
               ) : (
-                <PackageEntry name={result.name} query={this.state.query} aliases={result.aliases} cvss={result.highest_affecting_cvss} />
+                <PackageEntry
+                  name={result.name}
+                  query={this.state.query}
+                  description={result.description}
+                  aliases={result.aliases}
+                  cvss={result.highest_affecting_cvss}
+                />
               );
             })
           )}
@@ -151,6 +171,7 @@ class Searcher extends Component {
 }
 
 Searcher.propTypes = {
+  /** history object to set the query in url */
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
 };
 

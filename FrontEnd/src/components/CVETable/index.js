@@ -24,6 +24,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
+/**
+ * Converts a list of CVEs to a table
+ */
 const CVETable = props => {
   return (
     <div className="table-responsive">
@@ -52,6 +55,7 @@ const CVETable = props => {
 };
 
 CVETable.propTypes = {
+  /** CVEs response from API */
   cves: PropTypes.objectOf(
     PropTypes.shape({
       id: PropTypes.string,

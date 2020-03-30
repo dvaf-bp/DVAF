@@ -25,6 +25,11 @@ import PropTypes from 'prop-types';
 import ChartComponent from 'react-chartjs-2';
 import 'Chart.PolarExtra.js';
 
+/**
+ * custom polar chart component
+ *
+ * For changing the chart look at Chart.PolarExtra.js/src/chart.polarExtra.js
+ */
 class PolarExtra extends Component {
   constructor(props) {
     super(props);
@@ -39,7 +44,30 @@ class PolarExtra extends Component {
 }
 
 PolarExtra.propTypes = {
+  /**
+   * data field of graph, see chart.js docs
+   *
+   * dataset must contain:
+   * * data\[\]: length of slice
+   * * width\[\]: width of slice
+   * * color\[\]: color of slice
+   */
   data: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
+  /**
+   * options field of graph, see chart.js docs
+   *
+   * options must contain:
+   * * widthBase: maximum value of width
+   * * colorBase: maximum value of color
+   *
+   * optional options:
+   * * text: circle in the center with the text inside
+   * * lengthLabel: label for length value
+   * * widthLabel: label for width value
+   * * colorLabel: label for color value
+   * * alwaysShowLabel: whether the label is always visible or not
+   * * toFixed: round to n decimal place
+   */
   options: PropTypes.oneOfType([PropTypes.object]),
 };
 

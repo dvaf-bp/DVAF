@@ -25,151 +25,156 @@ import Bar from 'react-chartjs-2';
 import 'chartjs-plugin-trendline';
 import PropTypes from 'prop-types';
 import Spinner from 'react-bootstrap/Spinner';
+import mergeRefs from 'react-merge-refs';
 import Timescale, { timeShown } from './timescale';
 import CVETable from '../CVETable';
 import Accordion from '../Accordion';
 import AccordionHeader from '../Accordion/Header';
 import AccordionContainer from '../Accordion/Container';
 import AccordionContent from '../Accordion/Content';
+import { BASE_URL } from '../../constants';
 
+/**
+ * Graph by time with changeable daterange and timestep
+ */
 class TimeGraph extends Component {
   constructor(props) {
     super(props);
 
-    this.options = {
-      responsive: true,
-      maintainAspectRatio: false,
-      legend: {
-        display: false,
-      },
-      tooltips: {
-        mode: 'index',
-        intersect: false,
-      },
-      scales: {
-        xAxes: [
-          {
-            stacked: true,
-            scaleLabel: {
-              display: true,
-              labelString: this.props.xLabel,
-            },
-          },
-        ],
-        yAxes: [
-          {
-            stacked: true,
-            ticks: {
-              beginAtZero: true,
-            },
-            scaleLabel: {
-              display: true,
-              labelString: this.props.yLabel,
-            },
-          },
-        ],
-      },
-    };
+    this.changeView = this.changeView.bind(this);
+    this.changeShownTimeframe = this.changeShownTimeframe.bind(this);
+    this.changeTimeframe = this.changeTimeframe.bind(this);
+    this.onBarClick = this.onBarClick.bind(this);
+    this.toggleCursor = this.toggleCursor.bind(this);
+
+    this.options = this.props.mode.getOptions(this.props.xLabel, this.props.yLabel, this.onBarClick, this.toggleCursor);
 
     this.state = {
-      chartData: {
-        labels: [],
-        datasets:
-          this.props.mode === 'package'
-            ? [
-                {
-                  trendlineLinear: {
-                    style: '#2ecc71',
-                    width: 2,
-                  },
-                  label: 'closed vulnerabilities',
-                  data: [0],
-                  backgroundColor: '#2ecc71',
-                  borderColor: '#27ae60',
-                  borderWidth: 2,
-                },
-                {
-                  trendlineLinear: {
-                    style: '#fc5c65',
-                    width: 2,
-                  },
-                  label: 'open vulnerabilities',
-                  data: [0],
-                  backgroundColor: '#fc5c65',
-                  borderColor: '#eb3b5a',
-                  borderWidth: 2,
-                },
-              ]
-            : [
-                {
-                  trendlineLinear: {
-                    style: '#45aaf2',
-                    width: 2,
-                  },
-                  label: 'vulnerabilities',
-                  data: [0],
-                  backgroundColor: '#fc5c65',
-                  borderColor: '#eb3b5a',
-                  borderWidth: 2,
-                },
-              ],
-      },
-      cvelist: [],
-      expanded: this.props.expanded,
+      labels: [],
+      datasets: this.props.mode.getDefaultDatasets(),
+      table: [],
+      show: this.props.show,
+      dataShown: '',
+      expanded: this.props.expandable && this.props.expanded,
     };
 
-    this.changeData = this.changeData.bind(this);
-    this.changeView = this.changeView.bind(this);
+    this.chartRef = React.createRef();
+    this.timescaleRef = React.createRef();
   }
 
-  changeData(labels, datas, expanded) {
-    this.setState(prev => {
-      const newState = { ...prev };
-      newState.chartData.labels = labels;
-      datas.forEach((data, i) => {
-        newState.chartData.datasets[i].data = [...data];
-      });
-      newState.cvelist = expanded;
-      return newState;
-    });
+  /**
+   * Handles click on bar of graph
+   * @param {*} e click event
+   */
+  onBarClick(e) {
+    const elements = this.chartRef.current.chartInstance.chart.getElementAtEvent(e);
+    if (elements.length === 0) return;
+
+    // this is chartjs
+    // eslint-disable-next-line
+    this.timescaleRef.current.onBarClick(this.state.labels[elements[0]._index]);
   }
 
-  changeView(expanded) {
-    this.setState({ expanded });
+  /**
+   * Handles hover on bar of graph. Changes cursor to pointer.
+   * @param {*} e hover event
+   */
+  toggleCursor(e) {
+    const elements = this.chartRef.current.chartInstance.chart.getElementAtEvent(e);
+    this.chartRef.current.chartInstance.canvas.style.cursor =
+      elements.length > 0 && this.state.show !== timeShown.day ? 'pointer' : 'default';
+  }
+
+  /**
+   * Changes the view between table and graph view
+   * @param {*} expanded If true, switch to table view
+   * @param {array} dates tuple of datestrings
+   */
+  changeView(expanded, dates) {
+    if (this.props.expandable) this.setState({ expanded }, () => this.changeTimeframe(dates));
+  }
+
+  /**
+   * Changes the timestep and then reloads the data
+   * @param {string} show timestep
+   * @param {array} dates tuple of datestrings
+   */
+  changeShownTimeframe(show, dates) {
+    this.setState({ show }, () => this.changeTimeframe(dates));
+  }
+
+  /**
+   * Reloads the data
+   * @param {array} dates tuple of datestrings
+   */
+  changeTimeframe(dates) {
+    const { dmyStartDate, dmyEndDate } = dates;
+    const url = `${this.state.expanded ? this.props.tableUrl : this.props.chartUrl}/${dmyStartDate}/${dmyEndDate}/${this.state.show}`;
+    fetch(BASE_URL + url)
+      .then(response => response.json())
+      .then(data => {
+        const retval = this.state.expanded ? this.props.mode.processTableData(data) : this.props.mode.processGraphData(data);
+        let { labels } = retval;
+        labels = labels.map(e => {
+          if (this.state.show === timeShown.year) return e.substr(12, 4);
+          if (this.state.show === timeShown.month) return e.substr(8, 8);
+          return e.substr(5, 11);
+        });
+
+        if (this.state.expanded) {
+          const { table } = retval;
+          this.setState(prev => ({ labels, table, dataShown: prev.show }));
+        } else {
+          const { datasets } = retval;
+          this.setState(prev => ({ labels, datasets, dataShown: prev.show }));
+        }
+      })
+      .catch(e => console.error(e));
   }
 
   render() {
-    const { labels } = this.state.chartData;
-
     return (
       <>
         <Timescale
-          mode={this.props.mode}
-          show={this.props.show}
-          expanded={this.state.expanded}
-          changeData={this.changeData}
+          defaultShown={this.props.show}
+          changeTimeframe={this.changeTimeframe}
+          changeShownTimeframe={this.changeShownTimeframe}
           changeView={this.changeView}
-          chartUrl={this.props.chartUrl}
-          tableUrl={this.props.tableUrl}
           expandable={this.props.expandable}
+          chartUrl={this.props.chartUrl}
+          ref={this.timescaleRef}
         />
+        {this.state.show !== this.state.dataShown && (
+          <div className="d-flex justify-content-center align-items-center">
+            <Spinner className="text-center my-4" as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+          </div>
+        )}
         {!this.state.expanded ? (
-          <div className="canvas-container">
-            <Bar ref={this.props.forwardRef} data={this.state.chartData} options={this.options} type="bar" />
+          <div className="canvas-container" style={{ visibility: this.state.show !== this.state.dataShown ? 'hidden' : 'visible' }}>
+            <Bar
+              ref={mergeRefs([this.chartRef, this.props.forwardRef])}
+              data={{ labels: this.state.labels, datasets: this.state.datasets }}
+              options={this.options}
+              type="bar"
+            />
           </div>
         ) : (
           [
-            this.state.cvelist.length > 0 ? (
-              <Accordion id="timeAccordion" className="my-4">
-                {labels.map((label, i) => {
+            this.state.table.length > 0 ? (
+              <Accordion
+                id="timeAccordion"
+                className="my-4"
+                style={{ visibility: this.state.show !== this.state.dataShown ? 'hidden' : 'visible' }}
+              >
+                {this.state.labels.map((label, i) => {
                   const lbl = label.replace(/\s/g, '');
-                  if (!this.state.cvelist || this.state.cvelist[i].length === 0) return '';
+                  if (!this.state.table || this.state.table[i].length === 0) return '';
                   return (
                     <AccordionContainer key={lbl}>
                       <AccordionHeader for={lbl}>{label}</AccordionHeader>
 
                       <AccordionContent for={lbl} parent="timeAccordion">
-                        <CVETable cves={this.state.cvelist[i]} />
+                        <CVETable cves={this.state.table[i]} />
                       </AccordionContent>
                     </AccordionContainer>
                   );
@@ -188,15 +193,29 @@ class TimeGraph extends Component {
 }
 
 TimeGraph.propTypes = {
+  /** If true, the table view is shown by default */
   expanded: PropTypes.bool,
-  xLabel: PropTypes.string,
-  yLabel: PropTypes.string,
-  chartUrl: PropTypes.string.isRequired,
-  tableUrl: PropTypes.string,
-  forwardRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]),
-  show: PropTypes.node,
-  mode: PropTypes.string.isRequired,
+  /** If true, the Graph Switch is shown */
   expandable: PropTypes.bool,
+  /** Label for the x-axis */
+  xLabel: PropTypes.string,
+  /** Label for the y-axis */
+  yLabel: PropTypes.string,
+  /** API URL for the graph data */
+  chartUrl: PropTypes.string.isRequired,
+  /** API URL for the table data */
+  tableUrl: PropTypes.string,
+  /** Reference for ChartComponent */
+  forwardRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]),
+  /** Default shown timestep */
+  show: PropTypes.string,
+  /** Graph mode, provides functions to convert api response to graph data */
+  mode: PropTypes.shape({
+    processGraphData: PropTypes.func,
+    processTableData: PropTypes.func,
+    getOptions: PropTypes.func,
+    getDefaultDatasets: PropTypes.func,
+  }).isRequired,
 };
 TimeGraph.defaultProps = {
   expanded: false,

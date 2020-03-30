@@ -25,6 +25,9 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './GraphSwitch.scss';
 
+/**
+ * Switch to change between the graph view and the table view
+ */
 class GraphSwitch extends Component {
   constructor(props) {
     super(props);
@@ -65,7 +68,9 @@ class GraphSwitch extends Component {
 }
 
 GraphSwitch.propTypes = {
+  /** If true, table is shown by default */
   defaultChecked: PropTypes.bool.isRequired,
+  /** Function with a boolean parameter, which is called on change  */
   onChange: PropTypes.func.isRequired,
 };
 

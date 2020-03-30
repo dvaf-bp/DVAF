@@ -27,6 +27,9 @@ import { Pie } from 'react-chartjs-2';
 import 'chartjs-plugin-colorschemes';
 import GraphSwitch from '../GraphSwitch';
 
+/**
+ * Graph for the distribution of lines of code
+ */
 class LanguageGraph extends Component {
   constructor(props) {
     super(props);
@@ -150,9 +153,13 @@ class LanguageGraph extends Component {
 }
 
 LanguageGraph.propTypes = {
+  /** If true, the table view is shown by default */
   expanded: PropTypes.bool,
+  /** Response from the api */
   slocs: PropTypes.node.isRequired,
+  /** Reference for the ChartComponent */
   forwardRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]),
+  /** If true, it is possible to switch between graph and table view */
   expandable: PropTypes.bool,
 };
 LanguageGraph.defaultProps = {

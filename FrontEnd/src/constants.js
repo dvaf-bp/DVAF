@@ -20,6 +20,28 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Affero General Public License for more details.
 */
-// eslint-disable-next-line
+import React from 'react';
+
 export const BASE_URL =
   process.env.NODE_ENV === 'production' ? 'https://mstar.tk.informatik.tu-darmstadt.de' : 'http://predserver.tk.informatik.tu-darmstadt.de';
+
+// Templates for InformationHelper
+export const INFO_TEMPLATE = {
+  debian: (
+    <span>
+      This data is collected from the <a href="https://tracker.debian.org/">Debian Package Tracker</a>.
+    </span>
+  ),
+  nvd: (
+    <span>
+      This data is collected using <a href="https://www.cve-search.org">CVE Search</a>, which is crawling the data from the NVD database.
+    </span>
+  ),
+  nvdwdeb: (
+    <span>
+      The package is from the Debian package repository. The CVEs are crawled from the{' '}
+      <a href="https://security-tracker.debian.org/tracker/">Debian Security Tracker</a>. All further information about the CVEs such as
+      publish date are from <a href="https://www.cve-search.org">CVE Search</a> and <a href="https://nvd.nist.gov">NVD</a> respectively.
+    </span>
+  ),
+};

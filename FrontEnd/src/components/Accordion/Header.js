@@ -23,6 +23,9 @@ GNU Affero General Public License for more details.
 import React from 'react';
 import PropTypes from 'prop-types';
 
+/**
+ * Accordion Header
+ */
 const Header = props => {
   return (
     <div className="card-header" id={`heading${props.for}`}>
@@ -43,8 +46,11 @@ const Header = props => {
 };
 
 Header.propTypes = {
+  /** If true, the header is disabled and therefore not clickable */
   disabled: PropTypes.bool,
+  /** Entry Id: connects Head to Content */
   for: PropTypes.string.isRequired,
+  /** Header Content, e.g. Text */
   children: PropTypes.node.isRequired,
 };
 

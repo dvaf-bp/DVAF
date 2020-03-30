@@ -25,7 +25,7 @@ $icon-list: "AVPhysical", "AVLocal", "AVAdjacent", "AVNetwork",
             "AuNone", "AuSingle", "AuMultiple", 
             "UIRequired", "UINone", "ACMedium", 
             "CNone", "CPartial", "CComplete", 
-            "INone", "IPartial", "IComplete", 
+            "INone", "IComplete", "IPartial", 
             "ANone", "APartial", "AComplete";
 
 @each $current-icon in $icon-list {

@@ -23,21 +23,32 @@ GNU Affero General Public License for more details.
 import React from 'react';
 import PropTypes from 'prop-types';
 
+/**
+ * Accordion
+ */
 const Accordion = props => {
   return (
-    <div className={`accordion ${props.className}`} id={props.id}>
+    <div className={`accordion ${props.className}`} id={props.id} style={props.style}>
       {props.children}
     </div>
   );
 };
 
 Accordion.propTypes = {
+  /** Contains (multiple) AccordionContainer */
   children: PropTypes.node.isRequired,
+  /** ID to identify this accordion */
   id: PropTypes.string.isRequired,
+  /** Forward classes to accordion div */
   className: PropTypes.string,
+  // this is the default type for style
+  /** Forward style to accordion div */
+  // eslint-disable-next-line
+  style: PropTypes.object,
 };
 Accordion.defaultProps = {
   className: '',
+  style: null,
 };
 
 export default Accordion;

@@ -23,6 +23,9 @@ GNU Affero General Public License for more details.
 import React from 'react';
 import PropTypes from 'prop-types';
 
+/**
+ * Accordion Body
+ */
 const Content = props => {
   return (
     <div id={`collapse${props.for}`} className="collapse" aria-labelledby={`heading${props.for}`} data-parent={`#${props.parent}`}>
@@ -32,8 +35,11 @@ const Content = props => {
 };
 
 Content.propTypes = {
+  /** Entry Id: connects Head to Content */
   for: PropTypes.string.isRequired,
+  /** Id of parent Accordion */
   parent: PropTypes.string.isRequired,
+  /** Content of Accordion Entry */
   children: PropTypes.node.isRequired,
 };
 

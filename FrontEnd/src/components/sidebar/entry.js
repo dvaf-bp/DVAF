@@ -29,6 +29,9 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 
 library.add(fas);
 
+/**
+ * Navigation Entry in the sidebar
+ */
 const Entry = props => {
   return (
     <li className="nav-item">
@@ -41,9 +44,13 @@ const Entry = props => {
 };
 
 Entry.propTypes = {
+  /** If true, the entry link must match exactly the url to be active */
   exact: PropTypes.bool,
+  /** Text */
   children: PropTypes.node.isRequired,
+  /** Link */
   to: PropTypes.string.isRequired,
+  /** Icon */
   icon: PropTypes.string.isRequired,
 };
 

@@ -25,6 +25,9 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './hamburger.scss';
 
+/**
+ * Hamburger button to open the sidebar
+ */
 const Hamburger = props => {
   return (
     <button type="button" className="hamburger btn mr-2" onClick={props.click}>
@@ -34,6 +37,7 @@ const Hamburger = props => {
 };
 
 Hamburger.propTypes = {
+  /** Function which handles the click on the hamburger */
   click: PropTypes.func.isRequired,
 };
 

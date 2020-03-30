@@ -27,6 +27,9 @@ import CVSSCalculator from './CVSSCalculator';
 import ScoreCircle from '../ScoreCircle';
 import QuestionHelper from '../questionHelper';
 
+/**
+ * Report for a given CVE
+ */
 class CVEReport extends Component {
   constructor(props) {
     super(props);
@@ -85,7 +88,10 @@ class CVEReport extends Component {
           <div className="card mb-5">
             <div className="card-header">
               <h5 className="m-0">
-                <QuestionHelper elaboration="shortcut_cwe">CWE</QuestionHelper> {this.state.cweData.id}
+                <QuestionHelper elaboration="shortcut_cwe">
+                  <a href={`https://cwe.mitre.org/data/definitions/${this.state.cweData.id}.html`}> CWE</a>
+                </QuestionHelper>{' '}
+                {this.state.cweData.id}
               </h5>
             </div>
             <div className="card-body">
@@ -106,6 +112,7 @@ class CVEReport extends Component {
 }
 
 CVEReport.propTypes = {
+  /** CVE id */
   CVEId: PropTypes.string.isRequired,
 };
 
