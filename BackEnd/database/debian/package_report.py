@@ -292,7 +292,6 @@ def compile_package_report(pkg_name: str, options: dict):
     modified = ""
 
     package = get_package_by_name(pkg_name)
-    logger.error(package)
 
     if package is not None:
         if get_default(options, "description", "no") == "yes":

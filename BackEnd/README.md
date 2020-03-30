@@ -23,8 +23,71 @@ GNU Affero General Public License for more details.
 # Debian Vulnerability Analyzer Framework Backend
 
 --- 
-### Coverage
+### Continuous Integration
 
 [![Build Status](https://travis-ci.com/mowirth/dvaf_backend.svg?token=aKfekXYkm4skpk55N4bG&branch=development)](https://travis-ci.com/mowirth/dvaf_backend)
 [![Code Coverage](https://codecov.io/gh/mowirth/dvaf_backend/branch/development/graph/badge.svg?token=gKhxEeb36m)](https://codecov.io/gh/mowirth/dvaf_backend)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/88a731445df3450f96c0339fa4deb4e8)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mowirth/dvaf_backend&amp;utm_campaign=Badge_Grade)
+
+## Installation
+
+DVAF requires Python 3.6+ and an existing MongoDB installation. 
+
+#### Dependencies
+
+Dependencies can be installed using pip, for example with pip install -r requirements.txt. Additional dependencies may be required.
+
+### cve-search
+
+The cve-search database must be initialized, please visit [cve-search](https://github.com/cve-search/cve-search).
+
+### Database
+
+The database is generated every night - to create the indices please use the setup.py script. To keep the database up-to-date, run dvaf.py. 
+
+### Webserver
+
+The webserver can be started over the wsgi.py file. We recommend using Gunicorn or another production-ready webserver to host DVAF. 
+
+### Systemd
+
+We recommend using two different systemd services
+
+Example Webserver Systemd (change the paths to your local installation accordingly): 
+
+```
+[Unit]
+Description=Debian Vulnerability Analyzer Framework
+
+[Install]
+WantedBy=multi-user.target
+[Service]
+User=dvaf_backend
+PermissionsStartOnly=true
+Environment="PATH=/opt/dvaf_backend/venv/bin"
+WorkingDirectory=/opt/dvaf_backend
+ExecStart=/opt/dvaf_backend/venv/bin/gunicorn --bind 127.0.0.1:6000 --timeout 300 wsgi:app
+TimeoutSec=600
+Restart=on-failure
+RuntimeDirectoryMode=755
+```
+
+We also recommend running a reverse proxy in front of the webserver. 
+
+Example Collector Systemd
+
+```
+[Unit]
+Description=Debian Vulnerability Analyzer Framework Data Collector
+
+[Install]
+WantedBy=multi-user.target
+[Service]
+User=dvaf_backend
+PermissionsStartOnly=true
+WorkingDirectory=/opt/dvaf_backend
+ExecStart=/opt/dvaf_backend/venv/bin/python /opt/dvaf_backend/dvaf.py
+TimeoutSec=600
+Restart=on-failure
+RuntimeDirectoryMode=755
+```

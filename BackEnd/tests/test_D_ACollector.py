@@ -91,6 +91,10 @@ class D_ACollectorTest(unittest.TestCase):
         self.assertEqual(d_a.db_fixed_section,
                          d_a_gold_standard["fixed-section"])
 
+    def test_get_d_a_from_repo_path(self):
+        DSA = DSACollector()
+        DSA.get_d_a_repo_paths_from_remote_repo()
+
     # This tests were excluded because salsa/Debian are not very happy with downloading the same list over and over again just for testing reason
     # Tests can be included again if something changes in the collectors, but for now, we are not going on their nerves and eat up their capacities.
 

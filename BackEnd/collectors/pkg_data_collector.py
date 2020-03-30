@@ -25,7 +25,6 @@ import time
 import logging
 import requests
 import psycopg2
-from tqdm import tqdm
 from bs4 import BeautifulSoup
 from datetime import datetime
 
@@ -84,7 +83,7 @@ class PackageCollector:
         self.load_packagedata()
 
         if pkg_names is not None:
-            for p in tqdm(pkg_names, unit="Packages", desc="Downloading Debian Packages"):
+            for p in pkg_names:
                 pkg = Package()
                 pkg.db_pkg_name = p
                 pkg.db_versions = []
@@ -252,7 +251,7 @@ class PackageCollector:
         cursor.execute("SELECT source, version, release, build_depends FROM sources")
         res = cursor.fetchall()
         self.dep_data = {}
-        for r in tqdm(res, unit="dependencies", desc="Loading dependencies"):
+        for r in res:
             name = r[0]
             version = r[1]
             dependencies = r[3:]
@@ -270,7 +269,7 @@ class PackageCollector:
         cursor.execute("SELECT package, source, count(*) FROM packages GROUP BY package, source")
         self.pkg_data = {}
         res = cursor.fetchall()
-        for r in tqdm(res, unit="pkgs", desc="Loading packages"):
+        for r in res:
             name = r[0]
             self.pkg_data[name] = r
 
@@ -346,7 +345,7 @@ class PackageCollector:
             logger.error("Failed to download debian tag data: %s", e)
             return
 
-        for pkg in tqdm(tag_data.splitlines(), unit="tags", desc="Splitting tags"):
+        for pkg in tag_data.splitlines():
             arr = pkg.split(": ")
             try:
                 # arr[0] is the package name... the rest of the array contains the other tags?

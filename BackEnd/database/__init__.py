@@ -22,7 +22,6 @@ GNU Affero General Public License for more details.
 """
 import logging
 from database.database import Database
-from database.udd.udd import UDD
 
 # setup per package logging
 logger = logging.getLogger(__package__)
@@ -41,4 +40,3 @@ logger.setLevel(logging.INFO)
 logger.info("Database logs will be saved in: " + LOG_FILE_PATH)
 
 db = Database()
-udd = UDD()

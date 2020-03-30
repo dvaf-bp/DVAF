@@ -25,7 +25,6 @@ import requests
 import logging
 import json
 import time
-from tqdm import tqdm
 from abc import ABC, abstractmethod
 
 
@@ -57,7 +56,7 @@ class D_ACollector(ABC):
     def get_d_as_from_paths(self, paths):
         d_as_pool = {}
 
-        for d_a_path in tqdm(paths, unit=self.file_prefix[:-1]):
+        for d_a_path in paths:
             d_a_data_file = self.get_data_from_url(
                 self.d_a_root_src + d_a_path)
             d_a = self.get_d_a_from_data(d_a_data_file)

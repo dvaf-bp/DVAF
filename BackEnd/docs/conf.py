@@ -40,8 +40,8 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 
 project = 'Debian Vulnerability Analyzer Framework'
-copyright = '2020, Nikoload Alexopoulos, Tim Lange, Moritz Wirth, Paul Zürcher, Jörn Schöndube'
-author = 'Nikoload Alexopoulos, Tim Lange, Moritz Wirth, Paul Zürcher, Jörn Schöndube'
+copyright = '2020, Nikoloas Alexopoulos, Tim Lange, Moritz Wirth, Paul Zürcher, Jörn Schöndube'
+author = 'Nikoloas Alexopoulos, Tim Lange, Moritz Wirth, Paul Zürcher, Jörn Schöndube'
 
 
 # -- General configuration ---------------------------------------------------

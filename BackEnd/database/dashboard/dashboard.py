@@ -24,16 +24,17 @@ GNU Affero General Public License for more details.
 This module provides the highlevel interface for the dashboard.
 This includes methods for querying data and caching results.
 """
-from database import logger
+from database import logger, db
 from database.stats.stats import (
     get_cve_count_over_time,
     get_cves_over_time
 )
-from database.dashboard.cache import DashboardCache
 from datetime import datetime
 from math import floor
+from database.cache import Cache
 
-dashboardCache = DashboardCache()
+cves_cache = Cache("DashboardCache", "dashboard_cves", True)
+cves_count_cache = Cache("DashboardCache", "dashboard_cves_count", True)
 
 
 def update_dashboard_cache():
@@ -41,6 +42,11 @@ def update_dashboard_cache():
     This method can be called every now and then to update the data
     cached for the dashboard.
     """
+
+    # drop collections on start
+    for col in db.database.cache.list_collection_names():
+        db.database.cache.drop_collection(col)
+
     # cache all stuff from 1970 up until now
     time_from = datetime(year=1970, month=1, day=1)
     time_to = datetime.now()
@@ -48,25 +54,25 @@ def update_dashboard_cache():
     logger.info("Beginning caching CVE counts " + str(time_from) + " to " + str(time_to))
 
     value = get_cve_count_over_time(time_from, time_to, "year")
-    dashboardCache.update("get_cve_count_over_time_year", value)
+    cves_count_cache.update(value, parameter="year")
 
     value = get_cve_count_over_time(time_from, time_to, "month")
-    dashboardCache.update("get_cve_count_over_time_month", value)
+    cves_count_cache.update(value, parameter="month")
 
     value = get_cve_count_over_time(time_from, time_to, "day")
-    dashboardCache.update("get_cve_count_over_time_day", value)
+    cves_count_cache.update(value, parameter="day")
 
     logger.info("Done")
     logger.info("Beginning caching CVEs " + str(time_from) + " to " + str(time_to))
 
     value = get_cves_over_time(time_from, time_to, "year")
-    dashboardCache.update("get_cves_over_time_year", value)
+    cves_cache.update(value, parameter="year")
 
     value = get_cves_over_time(time_from, time_to, "month")
-    dashboardCache.update("get_cves_over_time_month", value)
+    cves_cache.update(value, parameter="month")
 
     value = get_cves_over_time(time_from, time_to, "day")
-    dashboardCache.update("get_cves_over_time_day", value)
+    cves_cache.update(value, parameter="day")
 
     logger.info("Done")
 
@@ -107,11 +113,14 @@ def get_cve_count_over_time_cached(time_from, time_to, freq):
     val = [], []
 
     if freq == "year":
-        val = dashboardCache.get_value("get_cve_count_over_time_year")
+        # val = dashboardCache.get_value("get_cve_count_over_time_year")
+        val = cves_count_cache.get("year")
     elif freq == "month":
-        val = dashboardCache.get_value("get_cve_count_over_time_month")
+        # val = dashboardCache.get_value("get_cve_count_over_time_month")
+        val = cves_count_cache.get("month")
     elif freq == "day":
-        val = dashboardCache.get_value("get_cve_count_over_time_day")
+        # val = dashboardCache.get_value("get_cve_count_over_time_day")
+        val = cves_count_cache.get("day")
 
     if val is None:
         return get_cve_count_over_time(time_from, time_to, freq)
@@ -121,8 +130,8 @@ def get_cve_count_over_time_cached(time_from, time_to, freq):
     begin_index = binary_index(dates, time_from, False)
     end_index = binary_index(dates, time_to, True)
 
-    _dates = dates[begin_index:end_index + 1]
-    _cves = cves[begin_index:end_index + 1]
+    _dates = dates[begin_index:end_index]
+    _cves = cves[begin_index:end_index]
 
     return _dates, _cves
 
@@ -137,11 +146,14 @@ def get_cves_over_time_cached(time_from, time_to, freq):
     val = [], []
 
     if freq == "year":
-        val = dashboardCache.get_value("get_cves_over_time_year")
+        # val = dashboardCache.get_value("get_cves_over_time_year")
+        val = cves_cache.get("year")
     elif freq == "month":
-        val = dashboardCache.get_value("get_cves_over_time_month")
+        # val = dashboardCache.get_value("get_cves_over_time_month")
+        val = cves_cache.get("month")
     elif freq == "day":
-        val = dashboardCache.get_value("get_cves_over_time_day")
+        # val = dashboardCache.get_value("get_cves_over_time_day")
+        val = cves_cache.get("day")
 
     if val is None:
         return get_cves_over_time(time_from, time_to, freq)
@@ -151,7 +163,7 @@ def get_cves_over_time_cached(time_from, time_to, freq):
     begin_index = binary_index(dates, time_from, False)
     end_index = binary_index(dates, time_to, True)
 
-    _dates = dates[begin_index:end_index + 1]
-    _cves = cves[begin_index:end_index + 1]
+    _dates = dates[begin_index:end_index]
+    _cves = cves[begin_index:end_index]
 
     return _dates, _cves

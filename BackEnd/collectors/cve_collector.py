@@ -20,6 +20,8 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Affero General Public License for more details.
 """
+import os
+
 from database import db, logger
 from datetime import datetime
 
@@ -28,6 +30,7 @@ def collect_cves():
     logger.info("Starting to collect CVEs")
 
     # run cve script
+    os.system('python cvecollector/sbin/db_updater.py')
 
     logger.info("Collecting CVEs done.")
 

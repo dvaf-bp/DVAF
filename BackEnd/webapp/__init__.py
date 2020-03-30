@@ -52,8 +52,8 @@ logger.info("Webapp logs will be saved in: " + LOG_FILE_PATH)
 # importing this at the top would lead to cycling imports, so
 # style checking
 # is disabled for this line.
-from webapp.v1api import models  # noqa
 from webapp.v1api.packages import packages_endpoints  # noqa
 from webapp.v1api.dashboard import dashboard_endpoints  # noqa
 from webapp.v1api.cve import cve_endpoints  # noqa
 from webapp.v1api.meta import meta_endpoints  # noqa
+from webapp.v1api.cve import cwe_endpoints  # noqa

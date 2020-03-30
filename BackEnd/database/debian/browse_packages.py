@@ -76,6 +76,7 @@ def get_name_similar_packages(pkg_name, limit):
     options = {
         "aliases": "yes",
         "cves": "yes",
+        "description": "yes",
         "cve_report_options": {
             "cvss": "yes"
         }
@@ -90,7 +91,7 @@ def get_name_similar_packages(pkg_name, limit):
 
         if len(report["affecting_cves"]) > 0:
             highest_affecting_cvss = max(map(lambda e: e["cvss"],
-                                         report["affecting_cves"]))
+                                             report["affecting_cves"]))
         report["highest_affecting_cvss"] = highest_affecting_cvss
         report["open_cves"] = None
         report["closed_cves"] = None

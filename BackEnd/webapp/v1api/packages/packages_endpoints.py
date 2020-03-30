@@ -252,25 +252,6 @@ def ep_get_cves_by_package(pkg_name, time_from, time_to, freq):
     return jsonify(report)
 
 
-@app.route("/api/v1/packages/cves/count2/<string:pkg_name>/<string:time_from>/"
-           "<string:time_to>/<string:freq>", methods=["GET"])
-def ep_get_cvecounts_by_package(pkg_name, time_from, time_to, freq):
-    """
-    Deprecated
-    """
-    t_from = parse_datetime(time_from)
-    t_to = parse_datetime(time_to)
-
-    dates, cves = get_cve_count_by_time_freq(pkg_name, t_from, t_to, freq)
-
-    resp = {
-        "labels": dates,
-        "cves_count": cves
-    }
-
-    return jsonify(resp)
-
-
 @app.route("/api/v1/packages/<string:pkg_name>/<string:version>/"
            "dependencies",
            methods=['GET'])
@@ -477,6 +458,7 @@ def ep_upload_packages():
             "cvss": "yes"
         }
     }
+
     reports = compile_package_reports(pkg_names, options, pkg_versions)
     chart = create_polar_chart(reports)
 

@@ -18,9 +18,17 @@ webapp.v1api.dashboard.dashboard_endpoints
     :show-inheritance:
 
 webapp.v1api.cve.cve_endpoints
-------------------------------------------
+------------------------------
 
 .. automodule:: webapp.v1api.cve.cve_endpoints
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+webapp.v1api.cve.cwe_endpoints
+------------------------------
+
+.. automodule:: webapp.v1api.cve.cwe_endpoints
     :members:
     :undoc-members:
     :show-inheritance:

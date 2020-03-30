@@ -20,21 +20,17 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Affero General Public License for more details.
 """
-from webapp import app
-import atexit
-from apscheduler.schedulers.background import BackgroundScheduler
+from datetime import datetime
+from apscheduler.schedulers.blocking import BlockingScheduler
 from collectors.download_schedule import download
-from collectors.deb_sec_tracker import download_debian_security_tracker_json
+
+import atexit
 
 if __name__ == "__main__":
-    download_debian_security_tracker_json()
-    # setup scheduler
-    scheduler = BackgroundScheduler()
+    scheduler = BlockingScheduler()
     scheduler.add_job(func=download, trigger="interval",
-                      seconds=60 * 60 * 24)
+                      seconds=60 * 60 * 24, next_run_time=datetime.now())
     scheduler.start()
 
     # kill scheduler on exit
     atexit.register(lambda: scheduler.shutdown())
-
-    app.run()
