@@ -1,0 +1,4 @@
+serviceWorker.js
+node_modules/*
+build/*
+.github/*
