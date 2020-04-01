@@ -20,34 +20,40 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Affero General Public License for more details.
 */
-$icon-list: "AVPhysical", "AVLocal", "AVAdjacent", "AVNetwork", 
-            "ACLow", "ACHigh", 
-            "AuNone", "AuSingle", "AuMultiple", 
-            "UIRequired", "UINone", "ACMedium", 
-            "CNone", "CPartial", "CComplete", 
-            "INone", "IPartial", "IComplete", 
-            "ANone", "APartial", "AComplete";
+div.listing {
+    position: relative;
+    overflow: hidden;
 
-@each $current-icon in $icon-list {
-    $i: index($icon-list, $current-icon);
-    .icon-#{$current-icon} {
-        width: 2rem;
-        height: 2rem;
-        display: inline-block;
-        background: url("/img/cvssicons.png") 0 0 no-repeat;
-        background-position-x: -2rem * $i + 2rem;
-        background-size: cover;
-        vertical-align: middle;
-        font-size: 40px;
-        margin-right: 0.5rem;
+    .list-group {
+        transition: max-height 1s ease-out;
+        overflow: hidden;
+        max-height: 190px;
+    }
+
+    .list-group.full-h {
+        padding-bottom: 40px;
+        max-height: fit-content;
+    }
+
+    button.btn {
+        position: absolute;
+        bottom: 0;
+        border: 0;
+        width: 100%;
+        z-index: 99;
+        height: 40px;
+
+        &.is-closed {
+            background: linear-gradient(0deg, rgba(244,245,246,1) 0%, rgba(244,245,246,1) 25%, rgba(244,245,246,0) 100%);
+
+            &:hover {
+                background: linear-gradient(0deg, rgba(255, 255, 255,1) 0%, rgba(255, 255, 255,1) 25%, rgba(255, 255, 255,0) 100%);
+            }
+        }
+
+        &:focus {
+            outline:none;
+            box-shadow: none;
+        }
     }
 }
-
-.list-group-item-warning-plus {
-    color: darken(#856404, 5%);
-    background-color: darken(#ffeeba, 15%);
-}
-
-.nowrap {
-    white-space: nowrap;
-  }

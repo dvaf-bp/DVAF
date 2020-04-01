@@ -1,0 +1,96 @@
+/*
+DVAF -  offers the security-research community with up-to-date information
+        about vulnerability trends, types, etc.
+
+Copyright (C) 2019-2020
+Nikolaos Alexopoulos <alexopoulos@tk.tu-darmstadt.de>,
+Lukas Hildebrand <lukas.hildebrand@stud.tu-darmstadt.de>,
+Jörn Schöndube <joe.sch@protonmail.com>,
+Tim Lange <tim.lange@stud.tu-darmstadt.de>,
+Moritz Wirth <mw@flanga.io>,
+Paul-David Zürcher <mail@pauldavidzuercher.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+*/
+$aside-bg: #3c596a;
+$aside-col: white;
+
+aside.sidebar {
+    &-hide {
+        left: -200px;
+    }
+
+    background: $aside-bg;
+    position: fixed;
+    padding: 0;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 100;
+    width: 200px;
+    transition: left 0.5s;
+
+    header {
+        background: darken($aside-bg, 10%);
+        padding: 2rem;
+
+        h1 {
+            text-align: center;
+            color: $aside-col;
+        }
+
+        button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            color: white;
+
+
+    &:hover {
+        color: white;
+    }
+        }
+    }
+
+    .nav {
+        position: sticky;
+    }
+
+    .nav-link {
+        color: $aside-col;
+        border-bottom: 1px solid darken($aside-bg, 5%);
+        padding: 0.75rem 1rem;
+
+        i {
+            margin-right: 0.75rem;
+        }
+
+        &.active {
+            background: lighten($aside-bg, 5%);
+        }
+
+        &:hover {
+            background: lighten($aside-bg, 5%);
+        }
+    }
+
+    footer {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        padding: 0.5rem;
+
+        a {
+            color: white;
+            font-size: 0.75rem;
+        }
+    }
+}

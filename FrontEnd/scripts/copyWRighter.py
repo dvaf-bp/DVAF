@@ -102,13 +102,13 @@ def appendCopyRightIfNotIn(files, copyright):
             # (e.g. python:'"""', js: '/*' )
             # then follows 2 copyright and one emty line => 4 before
             fifthLine = ""
+            firstLine = ""
             inspectedFile_content = inspectedFile.readlines()
             if len(inspectedFile_content) >= 5:
                 fifthLine = inspectedFile_content[4]
-            else:
-                fifthLine = ""
+                firstLine = inspectedFile_content[0]
 
-        if not fifthLine.startswith("Copyright"):
+        if not fifthLine.startswith("Copyright") and not "no-automatic-copyright-generation" in firstLine:
             fileToAddCopyright.append(file)
     return fileToAddCopyright
 
@@ -169,3 +169,6 @@ if __name__ == "__main__":
     for file in filesMissCR:
         prepLinesAsComment(file, copyrightlines)
     print(colored("licensing is done :)", "green"))
+
+    if(len(filesMissCR) > 0):
+        exit(1)

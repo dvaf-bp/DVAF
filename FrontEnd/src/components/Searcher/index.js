@@ -24,9 +24,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { NavLink } from 'react-router-dom';
-import ScoreCircle from '../ScoreCircle';
+import Spinner from 'react-bootstrap/Spinner';
 import { BASE_URL } from '../../constants';
+import PackageEntry from './PackageEntry';
+import CVEEntry from './CVEEntry';
 
 class Searcher extends Component {
   constructor(props) {
@@ -36,6 +37,8 @@ class Searcher extends Component {
       query: '',
       results: [],
       show: 10,
+      loading: false,
+      message: '',
     };
 
     this.timeout = null;
@@ -78,14 +81,31 @@ class Searcher extends Component {
         this.setState({ results: [] });
         return;
       }
-      if (value.length < 3) return;
+      if (value.length < 3) {
+        this.setState({ message: 'you have to enter more then 3 charakters to start searching...', loading: false, results: [] });
+        return;
+      }
 
-      fetch(`${BASE_URL}/api/v1/packages/match/${value}`)
-        .then(response => response.json())
-        .then(data => {
-          this.setState({ results: data });
-        })
-        .catch(err => console.error(err));
+      this.setState({ message: '', loading: true });
+
+      if (value.substr(0, 3).toLowerCase() !== 'cve') {
+        fetch(`${BASE_URL}/api/v1/packages/match/${value}`)
+          .then(response => response.json())
+          .then(data => {
+            this.setState({ results: data, loading: false });
+          })
+          .catch(err => console.error(err));
+      } else {
+        fetch(`${BASE_URL}/api/v1/cves/match/${value.toUpperCase()}`)
+          .then(response => response.json())
+          .then(data => {
+            this.setState({
+              results: data.cves,
+              loading: false,
+            });
+          })
+          .catch(err => console.error(err));
+      }
     }, 250);
   }
 
@@ -108,30 +128,22 @@ class Searcher extends Component {
         </div>
         <h2 className="pt-3">Results</h2>
         <div className="container-fluid">
-          {this.state.results.slice(0, this.state.show).map(result => (
-            <div key={result.name} className="card mb-2">
-              <div className="card-body d-flex align-items-center justify-content-between">
-                <NavLink to={`/package/${result.name}`}>
-                  <h4 className="card-title">{result.name}</h4>
-                  {result.aliases.length > 1 ? (
-                    <p className="card-text text-secondary">
-                      also known as{' '}
-                      {result.aliases
-                        .slice(1)
-                        .join(', ')
-                        .substring(-2)}
-                    </p>
-                  ) : (
-                    ''
-                  )}
-                </NavLink>
-                <div className="text-center">
-                  Highest Severity:
-                  <ScoreCircle number={result.highest_affecting_cvss} />
-                </div>
-              </div>
+          {this.state.message}
+          {this.state.loading ? (
+            <div style={{ textAlign: 'center' }}>
+              <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
             </div>
-          ))}
+          ) : (
+            this.state.results.slice(0, this.state.show).map(result => {
+              if (this.state.query === '') return '';
+
+              return this.state.query.substr(0, 3).toLowerCase() === 'cve' ? (
+                <CVEEntry name={result.id} query={this.state.query} cvss={result.cvss ? result.cvss : 0} desc="" />
+              ) : (
+                <PackageEntry name={result.name} query={this.state.query} aliases={result.aliases} cvss={result.highest_affecting_cvss} />
+              );
+            })
+          )}
         </div>
       </>
     );

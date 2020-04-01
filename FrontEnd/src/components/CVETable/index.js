@@ -36,7 +36,7 @@ const CVETable = props => {
           </tr>
         </thead>
         <tbody>
-          {props.cves.map((cve, i) => (
+          {(props.cves || []).map((cve, i) => (
             <tr key={String(i) + cve.id}>
               <td>
                 <Link to={`/cve/${cve.id}`}>{cve.id}</Link>

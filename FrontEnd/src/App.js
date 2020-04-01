@@ -22,10 +22,10 @@ GNU Affero General Public License for more details.
 */
 import React, { Component } from 'react';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
-import Dashboard from './pages/dashboard/dashboard';
-import SearchPage from './pages/search/search';
-import UploadPage from './pages/upload/upload';
-import DocPage from './pages/doc/doc';
+import Dashboard from './pages/dashboard';
+import SearchPage from './pages/search';
+import ScanPage from './pages/scan';
+import InfoPage from './pages/info';
 import ExportPage from './pages/export';
 import PackagePage from './pages/package';
 import ResultsPage from './pages/results';
@@ -36,7 +36,7 @@ import './App.scss';
 import Hamburger from './components/sidebar/hamburger';
 import VulnView from './pages/package/VulnView';
 import Imprint from './pages/Imprint/imprint';
-import DSGVO from './pages/DSGVO/DSGVO';
+import DSGVO from './pages/DSGVO';
 import Footer from './components/footer';
 
 class App extends Component {
@@ -80,9 +80,9 @@ class App extends Component {
               <Route path="/package/:name/vuln" component={VulnView} />
               <Route path="/package/:name/languages" component={LanguageView} />
               <Route path="/package/:name" component={PackagePage} />
-              <Route path="/upload" component={UploadPage} />
+              <Route path="/scan" component={ScanPage} />
               <Route path="/results" component={ResultsPage} />
-              <Route path="/doc" component={DocPage} />
+              <Route path="/info" component={InfoPage} />
               <Route path="/export" component={ExportPage} />
               <Route path="/cve/:id" component={CVEPage} />
               <Route path="/imprint" component={Imprint} />

@@ -26,7 +26,7 @@ import PropTypes from 'prop-types';
 import TimeGraph from '../../../components/TimeGraph';
 import PageTitle from '../../../components/pagetitle';
 import GraphContainer from '../../../components/GraphContainer';
-import { timeShown } from '../../../components/timescale';
+import { timeShown } from '../../../components/TimeGraph/timescale';
 
 const VulnView = props => {
   return (

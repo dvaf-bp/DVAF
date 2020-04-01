@@ -23,11 +23,20 @@ GNU Affero General Public License for more details.
 import React from 'react';
 import PropTypes from 'prop-types';
 import './pagetitle.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link } from 'react-router-dom';
 
 const PageTitle = props => {
   return (
     <header className="pagetitle">
       <div>
+        {props.backLink !== '' ? (
+          <Link to={props.backLink} className="text-secondary">
+            <FontAwesomeIcon title="Go back to search" icon={['fa', 'arrow-left']} className="mr-3" style={{ fontSize: '1.5rem' }} />
+          </Link>
+        ) : (
+          ''
+        )}
         <h1 className="d-inline">{props.children}</h1>
       </div>
       <hr />
@@ -37,6 +46,11 @@ const PageTitle = props => {
 
 PageTitle.propTypes = {
   children: PropTypes.node.isRequired,
+  backLink: PropTypes.string,
+};
+
+PageTitle.defaultProps = {
+  backLink: '',
 };
 
 export default PageTitle;

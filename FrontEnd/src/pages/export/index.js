@@ -22,6 +22,7 @@ GNU Affero General Public License for more details.
 */
 import React from 'react';
 import PageTitle from '../../components/pagetitle';
+import QuestionHelper from '../../components/questionHelper';
 
 function ExportData() {
   return (
@@ -31,7 +32,7 @@ function ExportData() {
         <h2 style={{ marginTop: '3rem' }}> Where can I get all the data you are using?</h2>
         <p>
           All the data we are using is directly <a href="/download">downloadable</a> or accessible as described in our{' '}
-          <a href="/doc">documentation</a>.
+          <a href="/info">Information</a>.
         </p>
         <div>
           <h2 style={{ marginTop: '3rem' }}>Where does the data come from?</h2>
@@ -42,10 +43,18 @@ function ExportData() {
                 <h3 style={{ marginTop: '3rem' }}>CVE-Search</h3>
                 <p>From CVE-Search we currently use the following data sets:</p>
                 <ul>
-                  <li>cves (Common Vulnerabilities and Exposure items) - source NVD NIST (JSON)</li>
-                  <li>cpe (Common Platform Enumeration items) - source NVD NIST</li>
-                  <li>cwe (Common Weakness Enumeration items) - source NVD NIST</li>
-                  <li>capec (Common Attack Pattern Enumeration and Classification) - source NVD NIST</li>
+                  <li>
+                    <QuestionHelper elaboration="shortcut_cve">cves</QuestionHelper> - source NVD NIST (JSON)
+                  </li>
+                  <li>
+                    <QuestionHelper elaboration="shortcut_cpe">cpe</QuestionHelper> - source NVD NIST
+                  </li>
+                  <li>
+                    <QuestionHelper elaboration="shortcut_cwe">cwe</QuestionHelper> - source NVD NIST
+                  </li>
+                  <li>
+                    <QuestionHelper elaboration="shortcut_capec">capec</QuestionHelper> - source NVD NIST
+                  </li>
                 </ul>
                 <p>
                   See <a href="https://github.com/cve-search/cve-search">CVE-Search</a> for more information.
@@ -80,7 +89,7 @@ function ExportData() {
             <li> d2sec - Information about CVE&apos;s, as released by d2sec</li>
             <li>capec - (Common Attack Pattern Enumeration and Classification) - source NVD NIST</li>
           </ul>
-          <p>There exisit other collections used for internal caching</p>
+          <p>There exist other collections used for internal caching</p>
         </div>
       </div>
     </>

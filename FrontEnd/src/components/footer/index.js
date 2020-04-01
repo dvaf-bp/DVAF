@@ -20,26 +20,61 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Affero General Public License for more details.
 */
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { BASE_URL } from '../../constants';
 
-function Footer(props) {
-  return (
-    <footer className={props.className}>
-      <hr />
-      <div className="row">
-        <div className="col-sm">
-          © 2020 Copyright: DVAF{' '}
-          <img src="https://travis-ci.com/mowirth/dvaf-frontend.svg?token=3pYLhWgBdLmhyWCVPfCP&branch=dev" alt="build status" />
-        </div>
-        <div id="SiteRef" className="col-sm">
-          <div className="float-right">
-            <a href="./dsgvo"> DSGVO </a> | <a href="./imprint">Imprint</a>
+class Footer extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      response: null,
+    };
+  }
+
+  componentDidMount() {
+    fetch(`${BASE_URL}/api/v1/meta/last_updated`)
+      .then(response => response.json())
+      .then(data => {
+        this.setState({ response: data });
+      })
+      .catch(e => console.error(e));
+  }
+
+  render() {
+    return (
+      <footer className={this.props.className}>
+        <hr />
+        <div className="row">
+          <div className="col-sm">
+            © 2020 Copyright: DVAF
+            <img
+              className="ml-1"
+              src="https://travis-ci.com/mowirth/dvaf-frontend.svg?token=3pYLhWgBdLmhyWCVPfCP&branch=dev"
+              alt="build status"
+            />
+          </div>
+          {this.state.response && (
+            <div className="col-sm text-center">
+              {Object.prototype.hasOwnProperty.call(this.state.response, 'cvedb') && (
+                <small className="text-muted">Last CVE update: {this.state.response.cvedb.cves.last_updated}</small>
+              )}
+              <br />
+              {Object.prototype.hasOwnProperty.call(this.state.response, 'debian') && (
+                <small className="text-muted">Last package update: {this.state.response.debian.last_updated}</small>
+              )}
+            </div>
+          )}
+          <div className="col-sm">
+            <div className="float-right">
+              <a href="./dsgvo">DSGVO</a> | <a href="./imprint">Imprint</a> | <a href="https://github.com/dvaf-bp/dvaf">Source Code</a>
+            </div>
           </div>
         </div>
-      </div>
-    </footer>
-  );
+      </footer>
+    );
+  }
 }
 
 Footer.propTypes = {

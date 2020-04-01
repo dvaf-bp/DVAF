@@ -72,9 +72,9 @@ Second, plots that show the ratio of different attributes over time (e.g. severi
 
 ### Package pages
 
-### Upload page
+### Scan Packages page
 
-### Documentation page
+### Information page
 
 ## Optional features
 

@@ -20,34 +20,11 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Affero General Public License for more details.
 */
-$icon-list: "AVPhysical", "AVLocal", "AVAdjacent", "AVNetwork", 
-            "ACLow", "ACHigh", 
-            "AuNone", "AuSingle", "AuMultiple", 
-            "UIRequired", "UINone", "ACMedium", 
-            "CNone", "CPartial", "CComplete", 
-            "INone", "IPartial", "IComplete", 
-            "ANone", "APartial", "AComplete";
+import React from 'react';
+import PageTitle from '../../components/pagetitle';
 
-@each $current-icon in $icon-list {
-    $i: index($icon-list, $current-icon);
-    .icon-#{$current-icon} {
-        width: 2rem;
-        height: 2rem;
-        display: inline-block;
-        background: url("/img/cvssicons.png") 0 0 no-repeat;
-        background-position-x: -2rem * $i + 2rem;
-        background-size: cover;
-        vertical-align: middle;
-        font-size: 40px;
-        margin-right: 0.5rem;
-    }
+function QA() {
+  return <PageTitle>How it works</PageTitle>;
 }
 
-.list-group-item-warning-plus {
-    color: darken(#856404, 5%);
-    background-color: darken(#ffeeba, 15%);
-}
-
-.nowrap {
-    white-space: nowrap;
-  }
+export default QA;

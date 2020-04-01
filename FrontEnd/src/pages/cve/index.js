@@ -28,7 +28,7 @@ import PageTitle from '../../components/pagetitle';
 const CVE = props => {
   return (
     <>
-      <PageTitle>{props.match.params.id}</PageTitle>
+      <PageTitle backLink={props.location.query ? `/search?query=${props.location.query}` : '/search'}>{props.match.params.id}</PageTitle>
       <CVEReport CVEId={props.match.params.id} />
     </>
   );
@@ -39,6 +39,9 @@ CVE.propTypes = {
     params: PropTypes.shape({
       id: PropTypes.string.isRequired,
     }).isRequired,
+  }).isRequired,
+  location: PropTypes.shape({
+    query: PropTypes.string.isRequired,
   }).isRequired,
 };
 

@@ -21,11 +21,16 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Affero General Public License for more details.
 */
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import Bar from 'react-chartjs-2';
 import 'chartjs-plugin-trendline';
 import PropTypes from 'prop-types';
-import Timescale, { timeShown } from '../timescale';
+import Spinner from 'react-bootstrap/Spinner';
+import Timescale, { timeShown } from './timescale';
+import CVETable from '../CVETable';
+import Accordion from '../Accordion';
+import AccordionHeader from '../Accordion/Header';
+import AccordionContainer from '../Accordion/Container';
+import AccordionContent from '../Accordion/Content';
 
 class TimeGraph extends Component {
   constructor(props) {
@@ -110,9 +115,11 @@ class TimeGraph extends Component {
               ],
       },
       cvelist: [],
+      expanded: this.props.expanded,
     };
 
     this.changeData = this.changeData.bind(this);
+    this.changeView = this.changeView.bind(this);
   }
 
   changeData(labels, datas, expanded) {
@@ -127,76 +134,54 @@ class TimeGraph extends Component {
     });
   }
 
-  render() {
-    let ex = '';
-    const { labels } = this.state.chartData;
-    if (this.props.expanded)
-      ex = (
-        <div className="accordion my-4" id="accordionExample">
-          {labels.map((label, i) => {
-            const lbl = label.replace(/\s/g, '');
-            if (this.state.cvelist[i].length === 0) return '';
-            return (
-              <div className="card" id={lbl}>
-                <div className="card-header" id={`heading${lbl}`}>
-                  <h4 className="mb-0">
-                    <button
-                      className="btn btn-link"
-                      type="button"
-                      data-toggle="collapse"
-                      data-target={`#collapse${lbl}`}
-                      aria-controls={`collapse${lbl}`}
-                    >
-                      {label}
-                    </button>
-                  </h4>
-                </div>
+  changeView(expanded) {
+    this.setState({ expanded });
+  }
 
-                <div id={`collapse${lbl}`} className="collapse" aria-labelledby={`#heading${lbl}`} data-parent="#accordionExample">
-                  <div className="card-body">
-                    <div className="table-responsive">
-                      <table className="table table-striped">
-                        <thead>
-                          <tr>
-                            <th>ID</th>
-                            <th>Summary</th>
-                            <th>Published</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {this.state.cvelist[i].map(cve => (
-                            <tr id={cve}>
-                              <td>
-                                <Link to={`/cve/${cve.id}`}>{cve.id}</Link>
-                              </td>
-                              <td>{cve.summary}</td>
-                              <td>{cve.published}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      );
+  render() {
+    const { labels } = this.state.chartData;
 
     return (
       <>
-        <div className="canvas-container">
-          <Bar ref={this.props.forwardRef} data={this.state.chartData} options={this.options} type="bar" />
-        </div>
         <Timescale
           mode={this.props.mode}
           show={this.props.show}
-          expanded={this.props.expanded}
+          expanded={this.state.expanded}
           changeData={this.changeData}
-          url={this.props.url}
+          changeView={this.changeView}
+          chartUrl={this.props.chartUrl}
+          tableUrl={this.props.tableUrl}
+          expandable={this.props.expandable}
         />
-        {ex}
+        {!this.state.expanded ? (
+          <div className="canvas-container">
+            <Bar ref={this.props.forwardRef} data={this.state.chartData} options={this.options} type="bar" />
+          </div>
+        ) : (
+          [
+            this.state.cvelist.length > 0 ? (
+              <Accordion id="timeAccordion" className="my-4">
+                {labels.map((label, i) => {
+                  const lbl = label.replace(/\s/g, '');
+                  if (!this.state.cvelist || this.state.cvelist[i].length === 0) return '';
+                  return (
+                    <AccordionContainer key={lbl}>
+                      <AccordionHeader for={lbl}>{label}</AccordionHeader>
+
+                      <AccordionContent for={lbl} parent="timeAccordion">
+                        <CVETable cves={this.state.cvelist[i]} />
+                      </AccordionContent>
+                    </AccordionContainer>
+                  );
+                })}
+              </Accordion>
+            ) : (
+              <div className="d-flex justify-content-center align-items-center">
+                <Spinner className="text-center my-4" as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+              </div>
+            ),
+          ]
+        )}
       </>
     );
   }
@@ -206,10 +191,12 @@ TimeGraph.propTypes = {
   expanded: PropTypes.bool,
   xLabel: PropTypes.string,
   yLabel: PropTypes.string,
-  url: PropTypes.string.isRequired,
+  chartUrl: PropTypes.string.isRequired,
+  tableUrl: PropTypes.string,
   forwardRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]),
   show: PropTypes.node,
   mode: PropTypes.string.isRequired,
+  expandable: PropTypes.bool,
 };
 TimeGraph.defaultProps = {
   expanded: false,
@@ -217,6 +204,8 @@ TimeGraph.defaultProps = {
   yLabel: '',
   forwardRef: null,
   show: timeShown.year,
+  tableUrl: '',
+  expandable: true,
 };
 
 export default TimeGraph;

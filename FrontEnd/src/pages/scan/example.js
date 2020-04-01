@@ -20,34 +20,11 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Affero General Public License for more details.
 */
-$icon-list: "AVPhysical", "AVLocal", "AVAdjacent", "AVNetwork", 
-            "ACLow", "ACHigh", 
-            "AuNone", "AuSingle", "AuMultiple", 
-            "UIRequired", "UINone", "ACMedium", 
-            "CNone", "CPartial", "CComplete", 
-            "INone", "IPartial", "IComplete", 
-            "ANone", "APartial", "AComplete";
+const text = `adduser/oldstable,now 3.115 all [installed]
+apache2/oldstable,now 2.4.25-3+deb9u8 amd64 [installed]
+apt/oldstable,now 1.4.9 amd64 [installed]
+apt-utils/oldstable,now 1.4.9 amd64 [installed]
+base-files/oldstable,now 9.9+deb9u11 amd64 [installed]
+wget/oldstable,oldstable,now 1.18-5+deb9u3 amd64  [installiert]`;
 
-@each $current-icon in $icon-list {
-    $i: index($icon-list, $current-icon);
-    .icon-#{$current-icon} {
-        width: 2rem;
-        height: 2rem;
-        display: inline-block;
-        background: url("/img/cvssicons.png") 0 0 no-repeat;
-        background-position-x: -2rem * $i + 2rem;
-        background-size: cover;
-        vertical-align: middle;
-        font-size: 40px;
-        margin-right: 0.5rem;
-    }
-}
-
-.list-group-item-warning-plus {
-    color: darken(#856404, 5%);
-    background-color: darken(#ffeeba, 15%);
-}
-
-.nowrap {
-    white-space: nowrap;
-  }
+export default text;
