@@ -27,6 +27,9 @@ import './index.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Entry from './entry';
 
+/**
+ * Navigation sidebar
+ */
 const Sidebar = props => {
   return (
     <aside className={`sidebar ${!props.open && 'sidebar-hide'}`}>
@@ -60,7 +63,9 @@ const Sidebar = props => {
 };
 
 Sidebar.propTypes = {
+  /** Function which handles the click on the close button */
   click: PropTypes.func.isRequired,
+  /** State of the sidebar. If true, it is visible */
   open: PropTypes.bool.isRequired,
 };
 

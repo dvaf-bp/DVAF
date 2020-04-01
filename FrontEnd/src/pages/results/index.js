@@ -29,6 +29,8 @@ import AccordionHeader from '../../components/Accordion/Header';
 import AccordionContent from '../../components/Accordion/Content';
 import AccordionContainer from '../../components/Accordion/Container';
 import PolarExtra from '../../components/PolarExtra';
+import SpaceAround from '../../components/SpaceAround';
+import Box from '../../components/Box';
 
 const Results = props => {
   if (!props.location.cves)
@@ -49,6 +51,45 @@ const Results = props => {
   return (
     <>
       <PageTitle>Results</PageTitle>
+      <SpaceAround>
+        <Box>
+          <span className="bignum">
+            {Object.entries(props.location.cves)
+              .map(([, cve]) => cve.affecting_cve_count)
+              .reduce((a, b) => a + b, 0)}
+          </span>
+          <span className="subtitle">
+            <b>Open vulnerabilities</b> <br />
+            In your System
+          </span>
+        </Box>
+        <Box>
+          <span className="bignum">
+            {Object.entries(props.location.cves)
+              .map(([, cve]) => cve.closed_cve_count)
+              .reduce((a, b) => a + b, 0)}
+          </span>
+          <span className="subtitle">
+            <b>Closed vulnerabilities</b>
+            <br />
+            regarding the packages
+          </span>
+        </Box>
+        <Box>
+          <span className="bignum">
+            {Object.entries(props.location.cves)
+              .map(([, cve]) => cve.affecting_cve_count)
+              .reduce((a, b) => a + b, 0) +
+              Object.entries(props.location.cves)
+                .map(([, cve]) => cve.affecting_cve_count)
+                .reduce((a, b) => a + b, 0)}
+          </span>
+          <span className="subtitle">
+            <b>Total fixed and unfixed vulnerabilities</b> <br />
+            regarding your packages
+          </span>
+        </Box>
+      </SpaceAround>
       <div className="mb-4">
         <PolarExtra
           data={{

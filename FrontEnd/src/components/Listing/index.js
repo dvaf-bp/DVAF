@@ -26,6 +26,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import './listing.scss';
 
+/**
+ * Expandable list of items. If the list is longer than 3 items, there's a more button allowing to view all the entries.
+ */
 class Listing extends Component {
   constructor(props) {
     super(props);
@@ -86,7 +89,9 @@ class Listing extends Component {
 }
 
 Listing.propTypes = {
-  list: PropTypes.node,
+  /** List of nodes to be displayed */
+  list: PropTypes.arrayOf(PropTypes.node),
+  /** Message displayed if list is empty */
   emptyMessage: PropTypes.string.isRequired,
 };
 

@@ -24,9 +24,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import ReactTooltip from 'react-tooltip';
-import getNewHelperID from './getHelperId';
+import ToolTip from 'rc-tooltip';
 
+/**
+ * Question mark icon with a tooltip on hover
+ */
 class QuestionHelper extends Component {
   constructor(props) {
     super(props);
@@ -50,25 +52,26 @@ class QuestionHelper extends Component {
     }
 
     this.state = {
-      helperId: getNewHelperID(),
       elaboration,
     };
   }
 
   render() {
     return (
-      <span>
-        <div data-multiline="true" data-tip="" data-for={this.state.helperId} style={{ display: 'inline-block' }}>
-          {this.props.children} <FontAwesomeIcon icon={faQuestionCircle} />{' '}
-        </div>{' '}
-        <ReactTooltip id={this.state.helperId}>{this.state.elaboration}</ReactTooltip>
-      </span>
+      <>
+        {this.props.children}
+        <ToolTip placement="top" overlay={this.state.elaboration}>
+          <FontAwesomeIcon className="ml-1" icon={faQuestionCircle} />
+        </ToolTip>
+      </>
     );
   }
 }
 
 QuestionHelper.propTypes = {
+  /** corresponding text */
   children: PropTypes.node.isRequired,
+  /** lookup string for content of the tooltip */
   elaboration: PropTypes.node.isRequired,
 };
 

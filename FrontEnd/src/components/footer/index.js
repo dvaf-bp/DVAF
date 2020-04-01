@@ -24,6 +24,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { BASE_URL } from '../../constants';
 
+/**
+ * Footer of the website
+ */
 class Footer extends Component {
   constructor(props) {
     super(props);
@@ -46,7 +49,7 @@ class Footer extends Component {
     return (
       <footer className={this.props.className}>
         <hr />
-        <div className="row">
+        <div className="row align-items-center">
           <div className="col-sm">
             © 2020 Copyright: DVAF
             <img
@@ -69,6 +72,9 @@ class Footer extends Component {
           <div className="col-sm">
             <div className="float-right">
               <a href="./dsgvo">DSGVO</a> | <a href="./imprint">Imprint</a> | <a href="https://github.com/dvaf-bp/dvaf">Source Code</a>
+              <a href="https://tu-darmstadt.de">
+                <img src="/tud_logo.gif" className="ml-2" alt="TU Darmstadt Logo" style={{ height: '50px' }} />
+              </a>
             </div>
           </div>
         </div>
@@ -78,6 +84,7 @@ class Footer extends Component {
 }
 
 Footer.propTypes = {
+  /** Passes className to footer tag */
   className: PropTypes.string,
 };
 Footer.defaultProps = {

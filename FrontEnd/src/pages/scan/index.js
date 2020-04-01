@@ -48,26 +48,46 @@ class ScanPage extends Component {
     this.uploadExample = this.uploadExample.bind(this);
   }
 
+  /**
+   * Highlights the dragzone on hover
+   * @param {*} e drag event
+   */
   dragOver(e) {
     e.stopPropagation();
     e.preventDefault();
     this.setState({ onDropzone: true });
   }
 
+  /**
+   * Dehighlights the dragzone on leave
+   * @param {*} e drag event
+   */
   dragLeave() {
     this.setState({ onDropzone: false });
   }
 
+  /**
+   * Triggers upload on drop
+   * @param {*} e drop event
+   */
   dragDrop(e) {
     e.preventDefault();
     e.stopPropagation();
     this.checkFile(e.dataTransfer.files);
   }
 
+  /**
+   * Triggers upload on input via file dialog
+   * @param {*} e input event
+   */
   fileChange(e) {
     this.checkFile(e.target.files);
   }
 
+  /**
+   * Validates the drag'n'drop input
+   * @param {*} droppedFiles
+   */
   checkFile(droppedFiles) {
     if (droppedFiles.length > 1) {
       this.setState({ dropzoneText: 'Please upload one file at a time' });
@@ -92,6 +112,9 @@ class ScanPage extends Component {
     );
   }
 
+  /**
+   * Uploads the example list from ./example.js
+   */
   uploadExample() {
     this.setState(
       {
@@ -102,6 +125,10 @@ class ScanPage extends Component {
     );
   }
 
+  /**
+   * Uploads textArea input after click on submit
+   * @param {*} e click event
+   */
   checkTextArea(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -136,6 +163,10 @@ class ScanPage extends Component {
       .catch(e => console.error(e));
   }
 
+  /**
+   * Handles the textArea input
+   * @param {*} event onChange of textarea
+   */
   handleChange(event) {
     this.setState({ textArea: event.target.value });
   }

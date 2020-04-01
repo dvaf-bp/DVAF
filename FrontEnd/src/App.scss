@@ -56,3 +56,6 @@ footer {
     }
     flex-shrink: 0;
 }
+// disable arrow from tooltip, because it sometimes is placed incorrectly
+// TODO: if fixed, delete this part
+.rc-tooltip-arrow { display: none; }

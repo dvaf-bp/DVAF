@@ -25,13 +25,17 @@ import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import ScoreCircle from '../ScoreCircle';
 
+/**
+ * Search result entry for packages
+ */
 const PackageEntry = props => {
   return (
     <div key={props.name} className="card mb-2">
       <div className="card-body d-flex align-items-center justify-content-between">
         <NavLink to={{ pathname: `/package/${props.name}`, query: props.query }}>
           <h4 className="card-title">{props.name}</h4>
-          {props.aliases.length > 1 && (
+          <p className="card-subtitle">{props.description} </p>
+          {props.aliases && props.aliases.length > 1 && (
             <p className="card-text text-secondary">
               also known as{' '}
               {props.aliases
@@ -51,10 +55,15 @@ const PackageEntry = props => {
 };
 
 PackageEntry.propTypes = {
+  /** Package name */
   name: PropTypes.string.isRequired,
+  /** Search query, needed for backLink */
   query: PropTypes.string.isRequired,
+  /** Aliases of the package */
   aliases: PropTypes.arrayOf(PropTypes.string).isRequired,
+  /** Score */
   cvss: PropTypes.number.isRequired,
+  description: PropTypes.string.isRequired,
 };
 
 export default PackageEntry;

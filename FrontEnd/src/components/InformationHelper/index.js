@@ -22,38 +22,28 @@ GNU Affero General Public License for more details.
 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
-import ScoreCircle from '../ScoreCircle';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import ToolTip from 'rc-tooltip';
+import 'rc-tooltip/assets/bootstrap.css';
+import { INFO_TEMPLATE } from '../../constants';
 
-/**
- * Search result entry for CVEs
- */
-const CVEEntry = props => {
+const InformationHelper = props => {
   return (
-    <div key={props.name} className="card mb-2">
-      <div className="card-body d-flex align-items-center justify-content-between">
-        <NavLink to={{ pathname: `/cve/${props.name}`, query: props.query }}>
-          <h4 className="card-title">{props.name}</h4>
-          <p className="card-text text-secondary">{props.desc}</p>
-        </NavLink>
-        <div className="text-center">
-          CVSS Score:
-          <ScoreCircle number={props.cvss} />
-        </div>
-      </div>
-    </div>
+    <ToolTip className="text-secondary" placement="right" overlay={props.template !== '' ? INFO_TEMPLATE[props.template] : props.children}>
+      <FontAwesomeIcon icon={faInfoCircle} />
+    </ToolTip>
   );
 };
 
-CVEEntry.propTypes = {
-  /** CVE id */
-  name: PropTypes.string.isRequired,
-  /** Search query, needed for backLink */
-  query: PropTypes.string.isRequired,
-  /** Description */
-  desc: PropTypes.string.isRequired,
-  /** CVSS score */
-  cvss: PropTypes.number.isRequired,
+InformationHelper.propTypes = {
+  children: PropTypes.node,
+  template: PropTypes.string,
 };
 
-export default CVEEntry;
+InformationHelper.defaultProps = {
+  template: '',
+  children: '',
+};
+
+export default InformationHelper;

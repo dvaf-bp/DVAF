@@ -50,6 +50,9 @@ BasicLayout.defaultProps = {
   children: [],
 };
 
+/**
+ * Visualizes a CVSS vector
+ */
 class CVSSCalculator extends Component {
   constructor(props) {
     super(props);
@@ -700,6 +703,7 @@ class CVSSCalculator extends Component {
 }
 
 CVSSCalculator.propTypes = {
+  /** CVSS vector string */
   cvssVector: PropTypes.string,
 };
 

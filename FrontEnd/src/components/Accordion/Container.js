@@ -23,11 +23,15 @@ GNU Affero General Public License for more details.
 import React from 'react';
 import PropTypes from 'prop-types';
 
+/**
+ * Accordion Container: Container for one Accordion Entry
+ */
 const Container = props => {
   return <div className="card">{props.children}</div>;
 };
 
 Container.propTypes = {
+  /** Contains AccordionHeader and AccordionContent */
   children: PropTypes.node.isRequired,
 };
 

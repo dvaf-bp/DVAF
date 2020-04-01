@@ -33,6 +33,8 @@ import TimeGraph from '../../components/TimeGraph';
 import LanguageGraph from '../../components/LanguageGraph';
 import { BASE_URL } from '../../constants';
 import { timeShown } from '../../components/TimeGraph/timescale';
+import InformationHelper from '../../components/InformationHelper';
+import PackageMode from '../../components/TimeGraph/modes/Package';
 
 class Package extends Component {
   constructor(props) {
@@ -51,6 +53,7 @@ class Package extends Component {
         ],
       },
       slocs: [],
+      debtags: [],
     };
     this.initialState = { ...this.state };
   }
@@ -62,6 +65,7 @@ class Package extends Component {
         const { versions } = pkg;
         const versionResults = [];
         const dependencies = pkg.versions[0].build_depends;
+        const debtags = pkg.use_tags;
         const { description } = pkg;
 
         versions.forEach(version => {
@@ -76,6 +80,7 @@ class Package extends Component {
           });
           newState.dependencies = dependencies;
           newState.description = description;
+          newState.debtags = debtags;
           return newState;
         });
       })
@@ -109,7 +114,14 @@ class Package extends Component {
         <PageTitle backLink={this.props.location.query ? `/search?query=${this.props.location.query}` : '/search'}>
           {this.props.match.params.name}
         </PageTitle>
+        <i>
+          {this.state.debtags.map(tag => (
+            <span className="ml-2 badge badge-info">{tag}</span>
+          ))}
+        </i>
+        <br />
         <i> {this.state.description} </i>
+
         <section className="package-page">
           <Box>
             <BoxTitle>Versions</BoxTitle>
@@ -131,6 +143,7 @@ class Package extends Component {
           </Box>
           <GraphContainer title="Languages">
             <LanguageGraph slocs={this.state.slocs} />
+            <InformationHelper template="debian" />
           </GraphContainer>
           <Box>
             <BoxTitle>Dependencies</BoxTitle>
@@ -147,11 +160,12 @@ class Package extends Component {
         </section>
         <GraphContainer title="Vulnerabilities versus Time">
           <TimeGraph
-            mode="package"
+            mode={PackageMode}
             show={timeShown.month}
             chartUrl={`/api/v1/packages/cves/count/${this.props.match.params.name}`}
             tableUrl={`/api/v1/packages/cves/${this.props.match.params.name}`}
           />
+          <InformationHelper template="nvdwdeb" />
         </GraphContainer>
       </>
     );

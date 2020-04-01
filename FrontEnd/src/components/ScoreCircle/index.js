@@ -24,6 +24,9 @@ import styled from 'styled-components';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+/**
+ * Number with a circle outline to visualize a score
+ */
 const ScoreCircle = props => {
   const color = number => {
     const percentage = number * 10;
@@ -32,18 +35,25 @@ const ScoreCircle = props => {
     return `rgb(${r}, ${g}, 0)`;
   };
 
-  const svg = (w, h, t) => {
+  /*
+    w: width in px
+    h: height in px
+    t: circle thickness in px
+    o: outline thickness in px
+    ocolor: outline color
+  */
+  const svg = (w, h, t, o, ocolor) => {
     const percent = props.number * 10;
     let deg = 180 * ((percent * 2) / 100) - 90;
     const r = 50;
 
     if (props.number > 50) deg += 180;
 
-    const px = Math.cos((deg * Math.PI) / 180) * r + 50 + t / 2;
-    const py = Math.sin((deg * Math.PI) / 180) * r + 50 + t / 2;
+    const px = Math.cos((deg * Math.PI) / 180) * r + 50 + t / 2 + o;
+    const py = Math.sin((deg * Math.PI) / 180) * r + 50 + t / 2 + o;
 
-    let d = `M ${50 + t / 2} ${t / 2}`;
-    if (percent > 50) d += ` A 50 50 0 0 1 ${50 + t / 2} ${100 + t / 2} A 50 50 0 0 1 ${px} ${py}`;
+    let d = `M ${50 + t / 2 + o} ${t / 2 + o}`;
+    if (percent > 50) d += ` A 50 50 0 0 1 ${50 + t / 2 + o} ${100 + t / 2 + o} A 50 50 0 0 1 ${px} ${py}`;
     else d += ` A 50 50 0 0 1 ${px} ${py}`;
 
     return (
@@ -51,11 +61,13 @@ const ScoreCircle = props => {
         style={{ display: 'block', margin: 'auto' }}
         xmlns="http://www.w3.org/2000/svg"
         version="1.1"
-        viewBox={`0 0 ${100 + t} ${100 + t}`}
-        width={w}
-        height={h}
+        viewBox={`0 0 ${100 + t + 2 * o} ${100 + t + 2 * o}`}
+        width={`${w}px`}
+        height={`${h}px`}
       >
         <g id="paths">
+          <circle cx={50 + t / 2 + o} cy={50 + t / 2 + o} r={r + t / 2 + o / 2} stroke={ocolor} fill="transparent" strokeWidth={o} />
+          <circle cx={50 + t / 2 + o} cy={50 + t / 2 + o} r={r - t / 2 - o / 2} stroke={ocolor} fill="transparent" strokeWidth={o} />
           <path d={d} style={{ fill: 'transparent', stroke: color(props.number), strokeWidth: t }} />
         </g>
       </svg>
@@ -77,14 +89,30 @@ const ScoreCircle = props => {
 
   return (
     <Circle>
-      {svg('64px', '64px', 8)}
+      {svg(props.size, props.size, props.thickness, props.outlineThickness, props.outlineColor)}
       <Number>{props.number}</Number>
     </Circle>
   );
 };
 
 ScoreCircle.propTypes = {
+  /** Score */
   number: PropTypes.number.isRequired,
+  /* Size in px */
+  size: PropTypes.number,
+  /* Thickness of the colored */
+  thickness: PropTypes.number,
+  /* Thickness of the outline */
+  outlineThickness: PropTypes.number,
+  /* Color of the outline */
+  outlineColor: PropTypes.string,
+};
+
+ScoreCircle.defaultProps = {
+  size: 64,
+  thickness: 14,
+  outlineThickness: 2,
+  outlineColor: '#BBBBBB',
 };
 
 export default ScoreCircle;
