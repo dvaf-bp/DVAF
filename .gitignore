@@ -156,6 +156,17 @@ fabric.properties
 .idea/httpRequests
 /.idea
 
+FrontEnd/.DS_Store
+FrontEnd/Thumbs.db
+FrontEnd/db.json
+FrontEnd/*.log
+FrontEnd/node_modules/
+# public/
+FrontEnd/.deploy*/
+FrontEnd/src/_drafts
+FrontEnd/package-lock.json
+FrontEnd/css/*.css
+FrontEnd/css/*.map
 .DS_Store
 Thumbs.db
 db.json
